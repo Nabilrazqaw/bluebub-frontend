@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bluebub - Marketplace Inovasi & Data Laut</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a4d68 0%, #088395 100%);
+            color: #333;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #088395;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before {
+            content: "🌊";
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #088395;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #05445e 0%, #088395 100%);
+            color: white;
+            padding: 4rem 5%;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            background: #40e0d0;
+            color: #05445e;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(64, 224, 208, 0.4);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 5%;
+        }
+
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #05445e;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            border-left: 5px solid #40e0d0;
+            padding-left: 1rem;
+        }
+
+        /* Map Section */
+        #map {
+            height: 500px;
+            border-radius: 15px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Marketplace Grid */
+        .marketplace-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(8, 131, 149, 0.3);
+            border-color: #40e0d0;
+        }
+
+        .product-card h3 {
+            color: #088395;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-card .price {
+            color: #05445e;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .product-card .category {
+            background: #40e0d0;
+            color: #05445e;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        /* AI Recommendations */
+        .ai-card {
+            background: linear-gradient(135deg, #088395 0%, #05445e 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            transition: transform 0.3s;
+        }
+
+        .ai-card:hover {
+            transform: translateX(10px);
+        }
+
+        .ai-card h4 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .match-score {
+            background: #40e0d0;
+            color: #05445e;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        /* Statistics Dashboard */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #40e0d0 0%, #088395 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        footer {
+            background: #05445e;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .marketplace-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #088395;
+            font-size: 1.2rem;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Bluebub</div>
+            <ul>
+                <li><a href="#home">Beranda</a></li>
+                <li><a href="#map">Peta Data</a></li>
+                <li><a href="#marketplace">Marketplace</a></li>
+                <li><a href="#ai">AI Kolaborasi</a></li>
+                <li><a href="#stats">Statistik</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero" id="home">
+        <h1>Selamat Datang di Bluebub</h1>
+        <p>Marketplace Digital untuk Inovasi dan Data Laut Indonesia</p>
+        <button class="cta-button" onclick="scrollToSection('marketplace')">Jelajahi Sekarang</button>
+    </section>
+
+    <div class="container">
+        <!-- Interactive Map Section -->
+        <section class="section" id="map">
+            <h2>🗺️ Peta Data Kelautan Interaktif</h2>
+            <div id="map"></div>
+        </section>
+
+        <!-- Marketplace Section -->
+        <section class="section" id="marketplace">
+            <h2>🛒 Marketplace Inovasi Laut</h2>
+            <div class="marketplace-grid" id="marketplace-grid">
+                <div class="loading">Memuat produk</div>
+            </div>
+        </section>
+
+        <!-- AI Recommendations -->
+        <section class="section" id="ai">
+            <h2>🤖 Rekomendasi AI - Kolaborator & Peluang</h2>
+            <div id="ai-recommendations">
+                <div class="loading">Menganalisis rekomendasi</div>
+            </div>
+        </section>
+
+        <!-- Statistics Dashboard -->
+        <section class="section" id="stats">
+            <h2>📊 Statistik Ekonomi Biru Indonesia</h2>
+            <div class="stats-grid" id="stats-grid">
+                <div class="loading">Memuat statistik</div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Bluebub - Marketplace Inovasi dan Data Laut Indonesia</p>
+        <p>Dikembangkan untuk masa depan ekonomi biru yang berkelanjutan</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script>
+        // Initialize Map
+        function initMap() {
+            const map = L.map('map').setView([-2.5, 118], 5);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Add sample marine data points
+            const marinePoints = [
+                { lat: -6.2, lng: 106.8, title: 'Jakarta - Populasi Ikan Tinggi', value: '85%' },
+                { lat: -8.5, lng: 115.2, title: 'Bali - Zona Konservasi', value: '92%' },
+                { lat: -5.1, lng: 119.4, title: 'Makassar - Budidaya Rumput Laut', value: '78%' },
+                { lat: 1.5, lng: 124.8, title: 'Manado - Terumbu Karang', value: '88%' },
+                { lat: -0.9, lng: 131.3, title: 'Raja Ampat - Biodiversitas Tinggi', value: '95%' }
+            ];
+
+            marinePoints.forEach(point => {
+                const marker = L.marker([point.lat, point.lng]).addTo(map);
+                marker.bindPopup(`<b>${point.title}</b><br>Kesehatan Laut: ${point.value}`);
+            });
+        }
+
+        // Load Marketplace Products
+        function loadMarketplace() {
+            const products = [
+                {
+                    name: 'Dataset Populasi Ikan Indonesia 2024',
+                    category: 'Data & Riset',
+                    price: 'Rp 2.500.000',
+                    description: 'Dataset lengkap populasi ikan di perairan Indonesia dengan analisis biogeografi.'
+                },
+                {
+                    name: 'Hasil Tangkapan Premium - Tuna Segar',
+                    category: 'Produk Laut',
+                    price: 'Rp 150.000/kg',
+                    description: 'Ikan tuna segar langsung dari nelayan lokal dengan sertifikasi sustainable fishing.'
+                },
+                {
+                    name: 'Proyek Riset: Coral Reef Restoration',
+                    category: 'Inovasi',
+                    price: 'Dana: Rp 50 Juta',
+                    description: 'Proyek restorasi terumbu karang di Raja Ampat mencari investor dan kolaborator.'
+                },
+                {
+                    name: 'Teknologi IoT untuk Monitoring Tambak',
+                    category: 'Teknologi',
+                    price: 'Rp 15.000.000',
+                    description: 'Sistem monitoring tambak otomatis dengan sensor pH, suhu, dan oksigen terlarut.'
+                },
+                {
+                    name: 'Rumput Laut Organik - Bulk Order',
+                    category: 'Produk Laut',
+                    price: 'Rp 25.000/kg',
+                    description: 'Rumput laut organik berkualitas tinggi untuk industri makanan dan kosmetik.'
+                },
+                {
+                    name: 'Analisis Prediksi Musim Tangkap Ikan',
+                    category: 'AI & Analitik',
+                    price: 'Rp 5.000.000',
+                    description: 'Layanan prediksi musim tangkap menggunakan machine learning dan data satelit.'
+                }
+            ];
+
+            const grid = document.getElementById('marketplace-grid');
+            grid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <span class="category">${product.category}</span>
+                    <h3>${product.name}</h3>
+                    <p>${product.description}</p>
+                    <div class="price">${product.price}</div>
+                </div>
+            `).join('');
+        }
+
+        // Load AI Recommendations
+        function loadAIRecommendations() {
+            const recommendations = [
+                {
+                    title: 'Dr. Siti Rahayu - Peneliti Biologi Laut',
+                    description: 'Kecocokan 95% berdasarkan minat riset terumbu karang dan konservasi laut.',
+                    score: '95%'
+                },
+                {
+                    title: 'PT. Maritim Teknologi Indonesia',
+                    description: 'Peluang kolaborasi: Pengembangan sensor IoT untuk monitoring kualitas air laut.',
+                    score: '88%'
+                },
+                {
+                    title: 'Kelompok Nelayan Sejahtera Bali',
+                    description: 'Potensi bisnis: Supply chain hasil tangkap berkelanjutan untuk pasar ekspor.',
+                    score: '82%'
+                },
+                {
+                    title: 'Startup OceanTech - Singapore',
+                    description: 'Investor potensial untuk proyek AI prediksi cuaca maritim.',
+                    score: '79%'
+                }
+            ];
+
+            const container = document.getElementById('ai-recommendations');
+            container.innerHTML = recommendations.map(rec => `
+                <div class="ai-card">
+                    <h4>${rec.title}</h4>
+                    <p>${rec.description}</p>
+                    <span class="match-score">Match: ${rec.score}</span>
+                </div>
+            `).join('');
+        }
+
+        // Load Statistics
+        function loadStatistics() {
+            const stats = [
+                { number: '17.504', label: 'Pulau di Indonesia' },
+                { number: '8.5 Jt km²', label: 'Luas Laut Indonesia' },
+                { number: '3.500+', label: 'Spesies Ikan' },
+                { number: '76%', label: 'Terumbu Karang Dunia' },
+                { number: 'Rp 1.5 T', label: 'Nilai Ekspor Perikanan' },
+                { number: '12 Juta', label: 'Nelayan Indonesia' }
+            ];
+
+            const grid = document.getElementById('stats-grid');
+            grid.innerHTML = stats.map(stat => `
+                <div class="stat-card">
+                    <div class="number">${stat.number}</div>
+                    <div class="label">${stat.label}</div>
+                </div>
+            `).join('');
+        }
+
+        // Smooth scroll function
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        // Initialize everything when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                initMap();
+                loadMarketplace();
+                loadAIRecommendations();
+                loadStatistics();
+            }, 500);
+        });
+        <!-- Midtrans Snap -->
+<script type="text/javascript"
+    src="https://app.sandbox.midtrans.com/snap/snap.js"
+    data-client-key="YOUR_MIDTRANS_CLIENT_KEY"></script>
+
+<!-- API Integration -->
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+    </script>
+</body>
+</html>
