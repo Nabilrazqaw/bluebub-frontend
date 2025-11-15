@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistik Prediksi Stok Ikan - Bluebub</title>
+    <link rel="icon" type="image/png" href="image/logonew.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/slider.css">
+    <!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #088395;
+        }
+        
+        h1 {
+            color: #088395;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            animation: fadeInDown 0.6s;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            animation: fadeInUp 0.6s;
+        }
+        
+        /* Filter Section - NEW */
+        .filter-section {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            animation: fadeIn 0.8s;
+        }
+        
+        .filter-label {
+            font-weight: 600;
+            color: #088395;
+        }
+        
+        .filter-select {
+            padding: 10px 15px;
+            border: 2px solid #088395;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-select:hover {
+            border-color: #05445e;
+            transform: scale(1.02);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #088395, #05445e);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(8, 131, 149, 0.3);
+            transition: all 0.3s;
+            cursor: pointer;
+            animation: slideInUp 0.6s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255,255,255,0.1);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+        
+        .stat-card:hover::before {
+            top: -100%;
+            right: -100%;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(8, 131, 149, 0.4);
+        }
+        
+        .stat-card h3 {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            animation: countUp 1s;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            animation: fadeIn 1s;
+        }
+        
+        .section-title {
+            color: #088395;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* Toggle Buttons - NEW */
+        .toggle-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .toggle-btn {
+            padding: 8px 16px;
+            border: 2px solid #088395;
+            background: white;
+            color: #088395;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+        
+        .toggle-btn.active {
+            background: #088395;
+            color: white;
+        }
+        
+        .toggle-btn:hover {
+            background: #088395;
+            color: white;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            animation: slideInLeft 0.8s;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #088395, #05445e);
+            color: white;
+        }
+        
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.3s;
+        }
+        
+        th:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        tbody tr {
+            border-bottom: 1px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+        
+        tbody tr:hover {
+            background: #f7fafc;
+            transform: scale(1.01);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        td {
+            padding: 12px 15px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 30px 0;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            animation: zoomIn 0.8s;
+        }
+        
+        canvas {
+            max-height: 100%;
+        }
+        
+        .info-box {
+            background: #f7fafc;
+            border-left: 4px solid #088395;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            transition: all 0.3s;
+            animation: slideInRight 0.8s;
+        }
+        
+        .info-box:hover {
+            transform: translateX(5px);
+            box-shadow: -5px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .info-box h4 {
+            color: #088395;
+            margin-bottom: 10px;
+        }
+        
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .metric-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .metric-item:hover {
+            transform: scale(1.05);
+            border-color: #088395;
+            box-shadow: 0 4px 12px rgba(8, 131, 149, 0.2);
+        }
+        
+        .metric-item .label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .metric-item .value {
+            font-size: 1.3rem;
+            color: #088395;
+            font-weight: bold;
+        }
+        
+        .fish-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .fish-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .fish-item:hover {
+            transform: translateY(-5px);
+            border-color: #088395;
+            box-shadow: 0 5px 15px rgba(8, 131, 149, 0.2);
+        }
+        
+        .fish-item.selected {
+            border-color: #088395;
+            border-width: 2px;
+            background: #f0f9ff;
+        }
+        
+        .fish-name {
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .fish-count {
+            background: #088395;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .fish-item:hover .fish-count {
+            background: #05445e;
+            transform: scale(1.1);
+        }
+        
+        .back-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #088395, #05445e);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(8, 131, 149, 0.3);
+        }
+        
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(8, 131, 149, 0.4);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #088395;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        /* Modal untuk detail fish - NEW */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+        
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            animation: slideInDown 0.4s;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .modal-close:hover {
+            color: #333;
+        }
+        
+        /* Progress Bar - NEW */
+        .progress-container {
+            width: 100%;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: linear-gradient(90deg, #088395, #05445e);
+            border-radius: 10px;
+            transition: width 1s ease-in-out;
+        }
+        
+        /* Animations */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        /* Search Box - NEW */
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .search-input:focus {
+            border-color: #088395;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(8, 131, 149, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        /* Modern Card Enhancements */
+.modern-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.card-icon {
+    font-size: 3rem;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    opacity: 0.2;
+    transition: all 0.3s;
+}
+
+.stat-card:hover .card-icon {
+    opacity: 0.4;
+    transform: scale(1.2) rotate(10deg);
+}
+
+.trend-indicator {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 10px;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+}
+
+.trend-indicator.positive {
+    background: rgba(46, 204, 113, 0.2);
+    color: #27ae60;
+}
+
+.trend-indicator.negative {
+    background: rgba(231, 76, 60, 0.2);
+    color: #c0392b;
+}
+
+.trend-indicator.neutral {
+    background: rgba(52, 152, 219, 0.2);
+    color: #2980b9;
+}
+
+.trend-indicator.warning {
+    background: rgba(243, 156, 18, 0.2);
+    color: #e67e22;
+}
+
+.trend-arrow {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Interactive Fish Cards */
+.fish-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.fish-item::after {
+    content: '👁️ Lihat Detail';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(8, 131, 149, 0.95);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-weight: bold;
+}
+
+.fish-item:hover::after {
+    opacity: 1;
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+}
+
+body.dark-mode .container {
+    background: #2c3e50;
+    color: #ecf0f1;
+}
+
+body.dark-mode .stat-card {
+    background: linear-gradient(135deg, #34495e, #2c3e50);
+}
+
+/* Glassmorphism Effect */
+.glass-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <a href="/" class="navbar-brand">
+            <img src="/image/logonew.png" class="navbar-logo" alt="Bluebub Logo">
+            <span class="brand-text">Bluebub</span>
+        </a>
+    
+        <div class="navbar-menu">
+            <a href="/index.html" class="nav-link">Beranda</a>
+            <a href="/map.html" class="nav-link">Peta</a>
+            <a href="/marketplace.html" class="nav-link">Marketplace</a>
+            <a href="/checkout.html" class="nav-link">Cart</a>
+            <a href="/ai.html" class="nav-link">AI Kolaborasi</a>
+            <a href="/statistik.html" class="nav-link active">Statistik</a>
+            <a href="/diskusi.html" class="nav-link">Diskusi</a>
+        </div>
+        <div id="auth-links"></div>
+    </nav>
+    <br><br><br>
+    
+    <div class="container">
+        <div>
+            <h1>📊 Statistik Prediksi Stok Ikan</h1>
+            <p class="subtitle">Dashboard Analisis & Proyeksi Stok Ikan 2025-2030</p>
+        </div>
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Memuat data statistik...</p>
+        </div>
+        
+        <div id="content" style="display: none;">
+            
+            
+            <!-- Statistik Utama -->
+            <div class="stats-grid">
+    <div class="stat-card modern-card" onclick="highlightSection('fishList')">
+        <div class="card-icon">🐟</div>
+        <h3>Total Jenis Ikan</h3>
+        <div class="stat-value" id="totalFish">-</div>
+        <div class="stat-label">Spesies</div>
+        <div class="trend-indicator positive">
+            <span class="trend-arrow">↗</span>
+            <span class="trend-text">+12% dari target</span>
+        </div>
+    </div>
+    
+    <div class="stat-card modern-card" onclick="highlightSection('yearlyChart')">
+        <div class="card-icon">📊</div>
+        <h3>Total Prediksi</h3>
+        <div class="stat-value" id="totalPredictions">-</div>
+        <div class="stat-label">Data Points (2025-2030)</div>
+        <div class="trend-indicator positive">
+            <span class="trend-arrow">↗</span>
+            <span class="trend-text">Growth +13.3%</span>
+        </div>
+    </div>
+    
+    <div class="stat-card modern-card" onclick="highlightSection('yearlyTable')">
+        <div class="card-icon">📈</div>
+        <h3>Rata-rata Stok/Bulan</h3>
+        <div class="stat-value" id="avgStock">-</div>
+        <div class="stat-label">Ekor/Bulan</div>
+        <div class="trend-indicator neutral">
+            <span class="trend-arrow">→</span>
+            <span class="trend-text">Stabil</span>
+        </div>
+    </div>
+    
+    <div class="stat-card modern-card">
+        <div class="card-icon">🎯</div>
+        <h3>Akurasi Model</h3>
+        <div class="stat-value">78.2%</div>
+        <div class="stat-label">Model Confidence</div>
+        <div class="trend-indicator warning">
+            <span class="trend-arrow">↘</span>
+            <span class="trend-text">Perlu improvement</span>
+        </div>
+    </div>
+</div>
+
+            
+            <!-- Info Model -->
+            <div class="section">
+                <div class="section-title">
+                    📈 Informasi Model Prediksi
+                    <div class="toggle-buttons">
+                        <button class="toggle-btn active" onclick="toggleInfo('model')">Model</button>
+                        <button class="toggle-btn" onclick="toggleInfo('params')">Parameters</button>
+                    </div>
+                </div>
+                <div class="info-box" id="modelInfo">
+                    <h4>Model Machine Learning: Support Vector Regression (SVR)</h4>
+                    <p><strong>Kernel:</strong> RBF (Radial Basis Function)</p>
+                    <p><strong>Parameter Optimal:</strong></p>
+                    <div class="metric-grid">
+                        <div class="metric-item">
+                            <div class="label">C (Regularization)</div>
+                            <div class="value">100</div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="label">Gamma</div>
+                            <div class="value">0.01</div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 60%"></div>
+                            </div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="label">Epsilon</div>
+                            <div class="value">0.2</div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 70%"></div>
+                            </div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="label">CV Score (MSE)</div>
+                            <div class="value">0.6911</div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 50%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multi-Chart Comparison -->
+<div class="section">
+    <div class="section-title">
+        📊 Perbandingan Multi-Tahun
+        <div class="toggle-buttons">
+            <button class="toggle-btn active" data-chart="line" onclick="switchChart('comparison', 'line')">📈 Line</button>
+            <button class="toggle-btn" data-chart="bar" onclick="switchChart('comparison', 'bar')">📊 Bar</button>
+            <button class="toggle-btn" data-chart="radar" onclick="switchChart('comparison', 'radar')">🎯 Radar</button>
+        </div>
+    </div>
+    <div class="chart-container">
+        <canvas id="comparisonChart"></canvas>
+    </div>
+</div>
+
+<!-- Donut Chart - Top 5 Fish -->
+<div class="section">
+    <div class="section-title">🐟 Top 5 Jenis Ikan dengan Prediksi Tertinggi</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="chart-container" style="height: 350px;">
+            <canvas id="topFishChart"></canvas>
+        </div>
+        <div style="display: flex; flex-direction: column; justify-content: center;">
+            <div class="metric-item" style="margin: 10px 0;">
+                <div class="label">🥇 Layang Scads</div>
+                <div class="value">556,000 ekor</div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 100%; background: linear-gradient(90deg, #FFD700, #FFA500);"></div>
+                </div>
+            </div>
+            <div class="metric-item" style="margin: 10px 0;">
+                <div class="label">🥈 Kembung</div>
+                <div class="value">445,000 ekor</div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 80%; background: linear-gradient(90deg, #C0C0C0, #A0A0A0);"></div>
+                </div>
+            </div>
+            <div class="metric-item" style="margin: 10px 0;">
+                <div class="label">🥉 Teri</div>
+                <div class="value">354,000 ekor</div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 64%; background: linear-gradient(90deg, #CD7F32, #8B4513);"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+            
+            <!-- Grafik Tren Tahunan -->
+            <div class="section">
+                <div class="section-title">
+                    📊 Tren Prediksi Tahunan
+                    <button class="toggle-btn" onclick="toggleFullscreen('yearlyChart')">⛶ Fullscreen</button>
+                </div>
+                <div class="chart-container" id="yearlyChartContainer">
+                    <canvas id="yearlyChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Tabel Prediksi per Tahun -->
+            <div class="section">
+                <div class="section-title">
+                    📋 Ringkasan Prediksi per Tahun
+                    <button class="toggle-btn" onclick="exportTable()">📥 Export</button>
+                </div>
+                <table id="yearlyTable">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable(0)">Tahun ⬍</th>
+                            <th onclick="sortTable(1)">Total Tahunan ⬍</th>
+                            <th onclick="sortTable(2)">Rata-rata Bulanan ⬍</th>
+                            <th onclick="sortTable(3)">Median ⬍</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Akan diisi dengan JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Daftar Jenis Ikan -->
+            <div class="section">
+                <div class="section-title">🐟 Daftar Jenis Ikan yang Diprediksi</div>
+                
+                <!-- Search Box -->
+                <div class="search-box">
+                    <input 
+                        type="text" 
+                        class="search-input" 
+                        id="fishSearch" 
+                        placeholder="🔍 Cari jenis ikan..." 
+                        onkeyup="searchFish()"
+                    >
+                    <span class="search-icon">🔍</span>
+                </div>
+                
+                <div class="fish-list" id="fishList">
+                    <!-- Akan diisi dengan JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Fitur yang Digunakan -->
+            <div class="section">
+                <div class="section-title">🔍 Fitur Time Series yang Digunakan</div>
+                <div class="info-box">
+                    <ul style="list-style-position: inside; line-height: 1.8;">
+                        <li><strong>Time Index:</strong> Indeks waktu sekuensial</li>
+                        <li><strong>Bulan:</strong> Fitur temporal (1-12)</li>
+                        <li><strong>Lag Features:</strong> Nilai stok 1-3 bulan sebelumnya</li>
+                        <li><strong>Rolling Mean:</strong> Rata-rata bergerak 3 bulan</li>
+                        <li><strong>Rolling Std:</strong> Standar deviasi 3 bulan</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Evaluasi Model -->
+            <div class="section">
+                <div class="section-title">✅ Evaluasi Model (Testing Set)</div>
+                <div class="metric-grid">
+                    <div class="metric-item" onclick="showMetricInfo('RMSE')">
+                        <div class="label">RMSE</div>
+                        <div class="value">43,725</div>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: 40%"></div>
+                        </div>
+                    </div>
+                    <div class="metric-item" onclick="showMetricInfo('MAE')">
+                        <div class="label">MAE</div>
+                        <div class="value">32,921</div>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: 35%"></div>
+                        </div>
+                    </div>
+                    <div class="metric-item" onclick="showMetricInfo('R2')">
+                        <div class="label">R² Score</div>
+                        <div class="value">-2.53</div>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: 10%"></div>
+                        </div>
+                    </div>
+                    <div class="metric-item" onclick="showMetricInfo('MAPE')">
+                        <div class="label">MAPE</div>
+                        <div class="value">76.38%</div>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: 30%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-box" style="margin-top: 20px;">
+                    <p><strong>Catatan:</strong> Model menunjukkan performa yang memerlukan perbaikan. R² score negatif mengindikasikan overfitting atau ketidaksesuaian model dengan data testing.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal untuk Fish Detail -->
+    <div id="fishModal" class="modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+    
+    <footer class="footer-modern">
+    <div class="footer-container">
+        <!-- Brand Section -->
+        <div class="footer-section">
+            <div class="footer-logo">
+                <img src="image/logonew.png" alt="Bluebub Logo" class="footer-logo-img">
+                <h3>Bluebub</h3>
+            </div>
+            <p class="footer-tagline">
+                Platform inovasi dan data laut Indonesia untuk masa depan ekonomi biru yang berkelanjutan
+            </p>
+            <div class="footer-social">
+                <a href="https://www.instagram.com/nabilorazqa/" class="social-icon" title="Instagram">📷</a>
+                <a href="#" class="social-icon" title="Twitter">🐦</a>
+                <a href="www.linkedin.com/in/nabil-razqa-a2b058286" class="social-icon" title="LinkedIn">💼</a>
+                <a href="#" class="social-icon" title="YouTube">🎥</a>
+            </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="footer-section">
+            <h4>Navigasi</h4>
+            <ul class="footer-links">
+                <li><a href="index.html">🏠 Beranda</a></li>
+                <li><a href="map-banten.html">🗺️ Peta Maritim</a></li>
+                <li><a href="marketplace.html">🛒 Marketplace</a></li>
+                <li><a href="ai.html">🤖 AI Kolaborasi</a></li>
+            </ul>
+        </div>
+        
+        <!-- Features -->
+        <div class="footer-section">
+            <h4>Fitur Utama</h4>
+            <ul class="footer-links">
+                <li><a href="statistik.html">🐟 Prediksi Stok Ikan</a></li>
+                <li><a href="#">🌊 Data Oseanografi</a></li>
+                <li><a href="statistik.html">📈 Analisis Perikanan</a></li>
+                <li><a href="map-banten.html">🎣 Zona Tangkap</a></li>
+            </ul>
+        </div>
+        
+        <!-- Contact Info -->
+        <div class="footer-section">
+            <h4>Kontak</h4>
+            <ul class="footer-contact">
+                <li>
+                    <span class="contact-icon">📧</span>
+                    <a href="mailto:info@bluebub.id">nabilrazqab@bluebub.id</a>
+                </li>
+                <li>
+                    <span class="contact-icon">📱</span>
+                    <a href="tel:+62123456789">+62 856 9725 0185</a>
+                </li>
+                <li>
+                    <span class="contact-icon">📍</span>
+                    <span>Banten, Indonesia</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Bottom Bar -->
+    <div class="footer-bottom">
+        <div class="footer-container">
+            <p>&copy; 2025 Bluebub - Marketplace Inovasi dan Data Laut Indonesia. All rights reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy Policy</a>
+                <span>•</span>
+                <a href="#">Terms of Service</a>
+                <span>•</span>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
+    </div>
+</footer>
+    <script>
+        const BACKEND_URL = 'http://localhost:3000';
+        let currentChart = null;
+        
+        // Data dari notebook
+        const yearlyData = {
+            2025: { total: 1187320, rata: 3805.51, median: 743.5 },
+            2026: { total: 1303341, rata: 4177.38, median: 706.0 },
+            2027: { total: 1337300, rata: 4286.22, median: 668.0 },
+            2028: { total: 1343487, rata: 4306.05, median: 668.0 },
+            2029: { total: 1345106, rata: 4311.24, median: 671.5 },
+            2030: { total: 1345477, rata: 4312.43, median: 672.5 }
+        };
+        
+        const fishSpecies = [
+            'Teri (Anchovy)', 'Teri nasi (Anchoives)', 'Belanak (Mullets)',
+            'Bentong (Oxeye scad)', 'Cendro (Needle fish)', 'Talang-Talang (Queen Fish)',
+            'Ikan Terbang (Flying fish)', 'Japuh (Rainbow sardine)', 'Kembung (Indian mackerels)',
+            'Layang Scads', 'Sirolemuru (Spoteed sardinella)', 'Selar (Trevallies)',
+            'Tembang (Fringescale sardinella)', 'Selanget (Chacunda gizard shad)', 
+            'Tetengkek (Torpedo scad)', 'Semar (Mene maculata)', 'Tongkol (Easternlittle tuna)',
+            'Layaran (Indo-pasificsaltfish)', 'Tenggiri (Narrow barred king mackerel)',
+            'Cucut (Sharks)', 'Manyung (Sea-cat-fishes)', 'Sebelah (Croaker)',
+            'Kuwe / Great trevally', 'Bawal Hitam / Black pomfret', 
+            'Bawal Putih / White pomfet', 'Golok-Golok / Dorab Wolf Hering'
+        ];
+        
+        async function loadStats() {
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                document.getElementById('totalFish').textContent = fishSpecies.length;
+                document.getElementById('totalPredictions').textContent = (fishSpecies.length * 72).toLocaleString();
+                
+                const totalStock = Object.values(yearlyData).reduce((sum, year) => sum + year.total, 0);
+                const avgStock = Math.round(totalStock / 72);
+                document.getElementById('avgStock').textContent = avgStock.toLocaleString();
+                
+                const tbody = document.querySelector('#yearlyTable tbody');
+                Object.entries(yearlyData).forEach(([year, data]) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><strong>${year}</strong></td>
+                        <td>${data.total.toLocaleString()} ekor</td>
+                        <td>${data.rata.toLocaleString()} ekor</td>
+                        <td>${data.median.toLocaleString()} ekor</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                
+                const fishList = document.getElementById('fishList');
+                fishSpecies.forEach(fish => {
+                    const item = document.createElement('div');
+                    item.className = 'fish-item';
+                    item.onclick = () => showFishDetail(fish);
+                    item.innerHTML = `
+                        <span class="fish-name">🐟 ${fish}</span>
+                        <span class="fish-count">72 prediksi</span>
+                    `;
+                    fishList.appendChild(item);
+                });
+                
+                createYearlyChart();
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loading').innerHTML = `
+                    <p style="color: red;">❌ Gagal memuat data</p>
+                `;
+            }
+        }
+        
+        function createYearlyChart() {
+            const ctx = document.getElementById('yearlyChart').getContext('2d');
+            const years = Object.keys(yearlyData);
+            const totals = Object.values(yearlyData).map(d => d.total);
+            
+            currentChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [{
+                        label: 'Total Prediksi Tahunan (ekor)',
+                        data: totals,
+                        borderColor: '#088395',
+                        backgroundColor: 'rgba(8, 131, 149, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: { display: true, position: 'top' },
+                        title: {
+                            display: true,
+                            text: 'Tren Prediksi Stok Ikan 2025-2030',
+                            font: { size: 16, weight: 'bold' }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            padding: 12,
+                            titleFont: { size: 14 },
+                            bodyFont: { size: 13 }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: value => value.toLocaleString() + ' ekor'
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 2000,
+                        easing: 'easeInOutQuart'
+                    }
+                }
+            });
+        }
+        
+        function updateChartType() {
+            const type = document.getElementById('chartType').value;
+            if (currentChart) {
+                currentChart.config.type = type === 'area' ? 'line' : type;
+                currentChart.config.data.datasets[0].fill = type === 'area';
+                currentChart.update();
+            }
+        }
+        
+        function filterByYear() {
+            const year = document.getElementById('yearFilter').value;
+            // Implementasi filter tahun
+            alert(`Filter tahun: ${year}`);
+        }
+        
+        function searchFish() {
+            const input = document.getElementById('fishSearch').value.toLowerCase();
+            const items = document.querySelectorAll('.fish-item');
+            
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(input) ? 'flex' : 'none';
+            });
+        }
+        
+        function showFishDetail(fishName) {
+    document.getElementById('modalTitle').textContent = `🐟 ${fishName}`;
+    document.getElementById('modalBody').innerHTML = `
+        <div style="text-align: center; padding: 20px;">
+            <p><strong>Total Prediksi:</strong> 72 data point (6 tahun × 12 bulan)</p>
+            <p><strong>Periode:</strong> 2025-2030</p>
+            <p><strong>Model:</strong> Support Vector Regression (SVR)</p>
+            <br>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="toggle-btn" onclick="window.location.href='detail-prediksi.html?fish=${encodeURIComponent(fishName)}'">
+                    📊 Lihat Detail Lengkap
+                </button>
+                <button class="toggle-btn" onclick="downloadPrediction('${fishName}')">
+                    📥 Download Data
+                </button>
+            </div>
+        </div>
+    `;
+    document.getElementById('fishModal').style.display = 'block';
+}
+
+        
+        function closeModal() {
+            document.getElementById('fishModal').style.display = 'none';
+        }
+        
+        function highlightSection(id) {
+            const element = document.getElementById(id);
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.style.animation = 'none';
+            setTimeout(() => {
+                element.style.animation = 'zoomIn 0.5s';
+            }, 10);
+        }
+        
+        function sortTable(column) {
+            alert(`Sort kolom ${column} - Fitur coming soon!`);
+        }
+        
+        function exportTable() {
+            alert('Export table - Fitur coming soon!');
+        }
+        
+        function toggleInfo(type) {
+            const buttons = document.querySelectorAll('.toggle-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+        
+        function toggleFullscreen(id) {
+            const container = document.getElementById(id + 'Container');
+            if (!document.fullscreenElement) {
+                container.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+        
+        function showMetricInfo(metric) {
+            const info = {
+                'RMSE': 'Root Mean Square Error - Mengukur rata-rata kesalahan prediksi',
+                'MAE': 'Mean Absolute Error - Rata-rata selisih absolut',
+                'R2': 'R² Score - Koefisien determinasi (semakin mendekati 1 semakin baik)',
+                'MAPE': 'Mean Absolute Percentage Error - Persentase error rata-rata'
+            };
+            alert(info[metric]);
+        }
+        
+        window.addEventListener('load', loadStats);
+
+    // Create Comparison Chart
+function createComparisonChart() {
+    const ctx = document.getElementById('comparisonChart').getContext('2d');
+    const years = Object.keys(yearlyData);
+    
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: years,
+            datasets: [
+                {
+                    label: 'Total',
+                    data: Object.values(yearlyData).map(d => d.total),
+                    backgroundColor: 'rgba(8, 131, 149, 0.6)',
+                    borderColor: '#088395',
+                    borderWidth: 2
+                },
+                {
+                    label: 'Rata-rata',
+                    data: Object.values(yearlyData).map(d => d.rata),
+                    backgroundColor: 'rgba(102, 126, 234, 0.6)',
+                    borderColor: '#667eea',
+                    borderWidth: 2
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: true, position: 'top' }
+            }
+        }
+    });
+}
+
+// Create Top Fish Donut Chart
+function createTopFishChart() {
+    const ctx = document.getElementById('topFishChart').getContext('2d');
+    
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Layang Scads', 'Kembung', 'Teri', 'Tongkol', 'Lainnya'],
+            datasets: [{
+                data: [556, 445, 354, 234, 1200],
+                backgroundColor: [
+                    '#FFD700',
+                    '#C0C0C0',
+                    '#CD7F32',
+                    '#088395',
+                    '#95a5a6'
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': ' + context.parsed.toLocaleString() + 'K ekor';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Switch Chart Type
+function switchChart(chartId, type) {
+    // Update active button
+    const buttons = document.querySelectorAll(`[data-chart]`);
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    // Update chart (implementation depends on chart instance)
+    Swal.fire({
+        icon: 'success',
+        title: 'Chart Updated!',
+        text: `Switched to ${type} chart`,
+        timer: 1500,
+        showConfirmButton: false
+    });
+}
+
+// Dark Mode Toggle
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    const icon = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    Swal.fire({
+        icon: 'info',
+        title: 'Mode Changed',
+        text: `${icon} ${document.body.classList.contains('dark-mode') ? 'Dark' : 'Light'} mode activated`,
+        timer: 1000,
+        showConfirmButton: false
+    });
+}
+
+// Call new charts
+window.addEventListener('load', () => {
+    loadStats();
+    setTimeout(() => {
+        createComparisonChart();
+        createTopFishChart();
+    }, 1500);
+});
+function showFishDetail(fishName) {
+    // Redirect ke halaman detail
+    window.location.href = `detail-prediksi.html?fish=${encodeURIComponent(fishName)}`;
+}
+    
+    </script>
+    <script src="js/sweetalert-helper.js"></script>
+<script src="js/auth.js"></script>
+        <script src="js/navbar.js"></script>
+
+</body>
+</html>

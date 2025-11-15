@@ -4,7 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bluebub - Marketplace Inovasi & Data Laut</title>
+    <link rel="icon" type="image/png" href="image/logonew.png">
+    
+    <!-- ===== JQUERY FIRST ===== -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <!-- ===== EXTERNAL CSS ===== -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    
+    <!-- ===== CUSTOM CSS ===== -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/slider.css">
+    <link rel="website icon" type="png" href="/image/logo.png">
+      
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+
+
     <style>
         * {
             margin: 0;
@@ -14,94 +39,9 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0a4d68 0%, #088395 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #088395 100%);
             color: #333;
-        }
-
-        /* Header & Navigation */
-        header {
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 5%;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #088395;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .logo::before {
-            content: "🌊";
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        nav a:hover {
-            color: #088395;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, #05445e 0%, #088395 100%);
-            color: white;
-            padding: 4rem 5%;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-
-        .cta-button {
-            background: #40e0d0;
-            color: #05445e;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(64, 224, 208, 0.4);
-        }
+        }        
 
         /* Main Content */
         .container {
@@ -126,12 +66,56 @@
             padding-left: 1rem;
         }
 
-        /* Map Section */
-        #map {
-            height: 500px;
-            border-radius: 15px;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.2);
-        }
+        .about-card.main-card {
+    grid-column: span 1;
+    background: linear-gradient(135deg, #088395 0%, #05445e 100%);
+    color: white;
+    overflow: hidden;
+    padding: 0;
+}
+
+.card-header-with-image {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.header-bg-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.header-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(8, 131, 149, 0.7), rgba(5, 68, 94, 0.9));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.about-card.main-card .card-icon {
+    font-size: 4rem;
+    margin-bottom: 0;
+}
+
+.about-card.main-card h3,
+.about-card.main-card p {
+    padding: 0 2rem;
+}
+
+.about-card.main-card h3 {
+    margin-bottom: 1rem;
+}
+
+.about-card.main-card p {
+    padding-bottom: 2rem;
+}
 
         /* Marketplace Grid */
         .marketplace-grid {
@@ -239,30 +223,7 @@
             opacity: 0.9;
         }
 
-        /* Footer */
-        footer {
-            background: #05445e;
-            color: white;
-            text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            nav ul {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .marketplace-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        
 
         /* Loading Animation */
         .loading {
@@ -276,40 +237,818 @@
             content: '...';
             animation: dots 1.5s steps(4, end) infinite;
         }
+.chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 400px;
+    max-width: 90vw;
+    height: 600px;
+    max-height: 80vh;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 40px rgba(0,0,0,0.2);
+    display: none;
+    flex-direction: column;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.chatbot-container.active {
+    display: flex;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.chatbot-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chatbot-header .close-btn {
+    font-size: 28px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.chatbot-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: #f8f9fa;
+}
+
+.chatbot-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chatbot-messages::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+.bot-message, .user-message {
+    margin-bottom: 15px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    max-width: 85%;
+    animation: slideIn 0.3s ease;
+    line-height: 1.5;
+}
+
+.bot-message {
+    background: white;
+    border: 1px solid #e0e0e0;
+    margin-right: auto;
+}
+
+.bot-message ul {
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+.bot-message li {
+    margin: 5px 0;
+}
+
+.user-message {
+    background: #667eea;
+    color: white;
+    margin-left: auto;
+    text-align: right;
+}
+
+.chatbot-input {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid #e0e0e0;
+    background: white;
+}
+
+.chatbot-input input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.3s;
+}
+
+.chatbot-input input:focus {
+    border-color: #667eea;
+}
+
+.chatbot-input button {
+    margin-left: 10px;
+    padding: 12px 20px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.chatbot-input button:hover {
+    background: #5568d3;
+    transform: scale(1.05);
+}
+
+.chatbot-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.chatbot-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.typing-indicator {
+    display: flex;
+    gap: 5px;
+    padding: 10px;
+}
+
+.typing-indicator span {
+    width: 8px;
+    height: 8px;
+    background: #999;
+    border-radius: 50%;
+    animation: typing 1.4s infinite;
+}
+
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-10px); }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Quick action buttons */
+.quick-action-btn {
+    transition: all 0.3s;
+}
+
+.quick-action-btn:hover {
+    background: #667eea !important;
+    color: white !important;
+    border-color: #667eea !important;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .chatbot-container {
+        width: 100vw;
+        height: 100vh;
+        bottom: 0;
+        right: 0;
+        border-radius: 0;
+    }
+    
+    .chatbot-toggle {
+        width: 60px;
+        height: 60px;
+        font-size: 20px;
+    }
+}
+
+
+.chatbot-toggle:hover {
+    transform: scale(1.1);
+}
+
+.typing-indicator {
+    display: flex;
+    gap: 5px;
+    padding: 10px;
+}
+
+.typing-indicator span {
+    width: 8px;
+    height: 8px;
+    background: #999;
+    border-radius: 50%;
+    animation: typing 1.4s infinite;
+}
+
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-10px); }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
         @keyframes dots {
             0%, 20% { content: '.'; }
             40% { content: '..'; }
             60%, 100% { content: '...'; }
         }
+
+
+        /* About Bluebub Section Styles */
+.about-bluebub-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%);
+    padding: 4rem 0;
+    margin-top: 0;
+}
+
+.about-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.about-hero {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: fadeInUp 0.8s ease;
+}
+
+.about-title {
+    font-size: 3rem;
+    color: #05445e;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+.about-subtitle {
+    font-size: 1.3rem;
+    color: #088395;
+    font-weight: 500;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.about-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
+}
+
+.about-card.main-card {
+    grid-column: span 1;
+    background: linear-gradient(135deg, #088395 0%, #05445e 100%);
+    color: white;
+}
+
+.card-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.about-card h3 {
+    color: #05445e;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.about-card.main-card h3 {
+    color: white;
+}
+
+.about-card p {
+    line-height: 1.8;
+    color: #555;
+}
+
+.about-card.main-card p {
+    color: rgba(255,255,255,0.95);
+}
+
+/* Features Section */
+.features-section {
+    margin-bottom: 4rem;
+}
+
+.section-heading {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #05445e;
+    margin-bottom: 2.5rem;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, #40e0d0, #088395);
+    border-radius: 2px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.feature-item {
+    background: white;
+    border-radius: 12px;
+    padding: 1.8rem;
+    text-align: center;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.feature-item:hover {
+    border-color: #40e0d0;
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(8, 131, 149, 0.2);
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.feature-item h4 {
+    color: #088395;
+    margin-bottom: 0.8rem;
+    font-size: 1.2rem;
+}
+
+.feature-item p {
+    color: #666;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* Statistics */
+.bluebub-stats {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    margin-bottom: 4rem;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+}
+
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+}
+
+.stat-box {
+    text-align: center;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #40e0d0 0%, #088395 100%);
+    border-radius: 15px;
+    color: white;
+    transition: transform 0.3s;
+}
+
+.stat-box:hover {
+    transform: scale(1.1);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 1rem;
+    opacity: 0.95;
+}
+
+/* How It Works */
+.how-it-works {
+    margin-bottom: 4rem;
+}
+
+.steps-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.step-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    flex: 1;
+    min-width: 200px;
+    max-width: 250px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+}
+
+.step-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 25px rgba(8, 131, 149, 0.3);
+}
+
+.step-number {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #40e0d0, #088395);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin: 0 auto 1rem;
+}
+
+.step-card h4 {
+    color: #05445e;
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+}
+
+.step-card p {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.step-arrow {
+    font-size: 2rem;
+    color: #088395;
+    font-weight: bold;
+}
+
+/* CTA Section */
+.about-cta {
+    background: linear-gradient(135deg, #088395 0%, #05445e 100%);
+    color: white;
+    text-align: center;
+    padding: 3rem 2rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+}
+
+.about-cta h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.about-cta p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    opacity: 0.95;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 1rem 2rem;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: #40e0d0;
+    color: #05445e;
+}
+
+.btn-primary:hover {
+    background: #35c5b5;
+    transform: scale(1.05);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.btn-secondary:hover {
+    background: white;
+    color: #088395;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .about-title {
+        font-size: 2rem;
+    }
+    
+    .about-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .section-heading {
+        font-size: 1.8rem;
+    }
+    
+    .steps-container {
+        flex-direction: column;
+    }
+    
+    .step-arrow {
+        transform: rotate(90deg);
+    }
+    
+    .stats-row {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+
     </style>
+
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">Bluebub</div>
-            <ul>
-                <li><a href="#home">Beranda</a></li>
-                <li><a href="#map">Peta Data</a></li>
-                <li><a href="#marketplace">Marketplace</a></li>
-                <li><a href="#ai">AI Kolaborasi</a></li>
-                <li><a href="#stats">Statistik</a></li>
-            </ul>
-        </nav>
-    </header>
+    <nav class="navbar" id="navbar">
+        <a href="/" class="navbar-brand">
+            <img src="/image/logonew.png" class="navbar-logo" alt="Bluebub Logo">
+            <span class="brand-text">Bluebub</span>
+        </a>
+    
+        <div class="navbar-menu">
+            <a href="/index.html" class="nav-link">Beranda</a>
+            <a href="/map-maritim.html" class="nav-link">Peta</a>
+            <a href="/marketplace.html" class="nav-link">Marketplace</a>
+            <a href="/checkout.html" class="nav-link">Cart</a>
+            <a href="/ai.html" class="nav-link">AI Kolaborasi</a>
+            <a href="/statistik.html" class="nav-link">Statistik</a>
+            <a href="/diskusi.html" class="nav-link">Diskusi</a>
+        </div>
+        <div id="auth-links"></div>
+    </nav>
 
-    <section class="hero" id="home">
-        <h1>Selamat Datang di Bluebub</h1>
-        <p>Marketplace Digital untuk Inovasi dan Data Laut Indonesia</p>
-        <button class="cta-button" onclick="scrollToSection('marketplace')">Jelajahi Sekarang</button>
-    </section>
+<div class="slick-slider">
+    <div class="slide">
+        <img src="image/1.jpg" alt="Image 1">
+        <div class="slide-content">
+            <h1>Empowering Blue Economy
+            <br>Through Data and AI.</h1>
+            <a href="/views/dashboard.ejs" class="btn btn-primary">Explore More</a>
+        </div>
+    </div>
+    <div class="slide">
+        <img src="image/2.jpg" alt="Image 2">
+            <div class="slide-content">
+                <h1>Create Your Own Small thing and effect the world</h1>
+            </div>
+    </div>
+    <div class="slide">
+        <img src="image/3.jpg" alt="Image 2">
+            <div class="slide-content">
+                <h1></h1>
+            </div>
+    </div>
+</div>    
 
+
+<!-- About Bluebub Section -->
+<section class="about-bluebub-section" id="tentang">
     <div class="container">
-        <!-- Interactive Map Section -->
-        <section class="section" id="map">
-            <h2>🗺️ Peta Data Kelautan Interaktif</h2>
-            <div id="map"></div>
-        </section>
+        <div class="about-content">
+            <div class="about-hero">
+                <h1 class="about-title">Tentang Bluebub</h1>
+                <p class="about-subtitle">Platform Inovatif untuk Ekonomi Biru Indonesia</p>
+            </div>
+
+            <div class="about-grid">
+                <!-- What is Bluebub -->
+                <div class="about-card main-card">
+                    <div class="card-header-with-image">
+                    <img src="image/IMG_5421.JPG" alt="Ocean Technology" class="header-bg-image">
+                        <div class="header-overlay">
+                            <div class="card-icon"></div>
+                        </div>
+                    </div>
+                    <h3>Apa itu Bluebub?</h3>
+                    <p>Bluebub adalah <strong>marketplace digital terintegrasi</strong> yang menghubungkan nelayan, peneliti, investor, dan pelaku bisnis maritim di Indonesia. Kami menggunakan teknologi AI dan data oceanografi untuk mendukung ekonomi biru yang berkelanjutan.</p>
+                </div>
+
+                <div class="about-card main-card">
+                    <div class="card-header-with-image">
+                    <img src="image/IMG_4335.JPG" alt="Ocean Technology" class="header-bg-image">
+                        <div class="header-overlay">
+                            <div class="card-icon"></div>
+                        </div>
+                    </div>
+                    <h3>Misi Kami</h3>
+                    <p>Bluebub <strong>Memberdayakan komunitas maritim Indonesia melalui akses data, teknologi AI, dan kolaborasi lintas sektor</strong> untuk pertumbuhan ekonomi biru yang berkelanjutan dan inklusif.</p>
+                </div>
+
+                <div class="about-card main-card">
+                    <div class="card-header-with-image">
+                    <img src="image/IMG_5698.JPG" alt="Ocean Technology" class="header-bg-image">
+                        <div class="header-overlay">
+                            <div class="card-icon"></div>
+                        </div>
+                    </div>
+                    <h3>Visi Kami</h3>
+                    <p>Menjadi platform nomor satu di Asia Tenggara yang mengintegrasikan teknologi, data maritim, dan kolaborasi untuk masa depan ekonomi biru yang lebih cerah.</p>
+
+                </div>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="features-section">
+                <h2 class="section-heading">Apa yang Kami Tawarkan?</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">📊</div>
+                        <h4>Data & Analitik</h4>
+                        <p>Akses data oceanografi, populasi ikan, dan prediksi cuaca maritim berbasis AI untuk decision making yang lebih baik.</p>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">🛒</div>
+                        <h4>Marketplace Terpercaya</h4>
+                        <p>Platform jual-beli hasil laut, teknologi maritim, dan dataset penelitian dengan sistem verifikasi kualitas.</p>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">🤝</div>
+                        <h4>Kolaborasi AI</h4>
+                        <p>Sistem rekomendasi AI yang menghubungkan peneliti, investor, dan pelaku bisnis berdasarkan minat dan kebutuhan.</p>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">🗺️</div>
+                        <h4>Peta Interaktif</h4>
+                        <p>Visualisasi zona tangkap ikan, area konservasi, dan potensi ekonomi maritim di seluruh Indonesia.</p>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">💬</div>
+                        <h4>Forum Diskusi</h4>
+                        <p>Ruang berbagi pengetahuan, best practices, dan networking untuk komunitas maritim Indonesia.</p>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">🎓</div>
+                        <h4>Riset & Inovasi</h4>
+                        <p>Dukungan untuk proyek riset, publikasi dataset, dan crowdfunding untuk inovasi teknologi kelautan.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="bluebub-stats">
+                <h2 class="section-heading">Dampak Bluebub</h2>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-number">10,000+</div>
+                        <div class="stat-label">Pengguna Aktif</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Transaksi Marketplace</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">150+</div>
+                        <div class="stat-label">Proyek Kolaborasi</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">1.2M+</div>
+                        <div class="stat-label">Data Points Tersedia</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- How It Works -->
+            <div class="how-it-works">
+                <h2 class="section-heading">Bagaimana Cara Kerjanya?</h2>
+                <div class="steps-container">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h4>Daftar & Buat Profil</h4>
+                        <p>Buat akun gratis dan lengkapi profil Anda (nelayan, peneliti, investor, atau pelaku bisnis).</p>
+                    </div>
+
+                    <div class="step-arrow">→</div>
+
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h4>Jelajahi Platform</h4>
+                        <p>Akses marketplace, data oceanografi, forum diskusi, dan AI recommendations sesuai kebutuhan Anda.</p>
+                    </div>
+
+                    <div class="step-arrow">→</div>
+
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h4>Kolaborasi & Transaksi</h4>
+                        <p>Mulai berkolaborasi dengan mitra potensial atau lakukan transaksi jual-beli dengan aman.</p>
+                    </div>
+
+                    <div class="step-arrow">→</div>
+
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h4>Kembangkan Bisnis</h4>
+                        <p>Manfaatkan insight AI dan data untuk mengembangkan bisnis maritim Anda secara berkelanjutan.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="about-cta">
+                <h2>Siap Bergabung dengan Komunitas Ekonomi Biru?</h2>
+                <p>Daftar sekarang dan mulai eksplorasi peluang di ekonomi maritim Indonesia</p>
+                <div class="cta-buttons">
+                    <a href="/register.html" class="btn btn-primary">Daftar Gratis</a>
+                    <a href="#marketplace" class="btn btn-secondary">Jelajahi Marketplace</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <div class="container">        
+
 
         <!-- Marketplace Section -->
         <section class="section" id="marketplace">
@@ -319,13 +1058,52 @@
             </div>
         </section>
 
-        <!-- AI Recommendations -->
-        <section class="section" id="ai">
-            <h2>🤖 Rekomendasi AI - Kolaborator & Peluang</h2>
-            <div id="ai-recommendations">
-                <div class="loading">Menganalisis rekomendasi</div>
-            </div>
+        <!-- Chatbot Widget -->
+<div id="bluebub-chatbot" class="chatbot-container">
+    <div class="chatbot-header">
+        <div onclick="toggleChatbot()" style="flex: 1; cursor: pointer;">
+            <span>🌊 Bluebub AI Assistant</span>
+            <br>
+            <small style="opacity: 0.8; font-size: 11px;">Tanya apa saja tentang ekonomi biru</small>
+        </div>
+        <button onclick="resetChatSession()" style="background: transparent; border: none; color: white; cursor: pointer; font-size: 18px; margin-right: 10px;" title="Reset Chat">
+            🔄
+        </button>
+        <span class="close-btn" onclick="toggleChatbot()">×</span>
+    </div>
+    <div class="chatbot-messages" id="chatbot-messages">
+        <div class="bot-message">
+            <p><strong>Halo! 👋</strong></p>
+            <p>Saya Bluebub AI Assistant. Saya bisa membantu Anda dengan:</p>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                <li>📊 Data oceanografi Indonesia</li>
+                <li>🐟 Informasi perikanan & bisnis hasil laut</li>
+                <li>🔬 Kolaborasi riset maritim</li>
+                <li>🤖 AI recommendations</li>
+            </ul>
+            <p>Ada yang bisa saya bantu?</p>
+        </div>
+    </div>
+    <div class="chatbot-input">
+        <input type="text" id="chatbot-input-field" placeholder="Ketik pertanyaan Anda...">
+        <button onclick="sendChatMessage()">
+            <span style="font-size: 18px;">📤</span>
+        </button>
+    </div>
+</div>
+
+<!-- Chatbot Toggle Button -->
+<button class="chatbot-toggle" onclick="toggleChatbot()">
+    💬
+    <span style="font-size: 10px; display: block;">Chat AI</span>
+</button>
+
+ <!-- AI Recommendations Section -->
+        <section class="section" id="ai-kolaborasi">
+            <h2>🤖 AI Kolaborasi</h2>
+            <div id="ai-recommendations-container"></div>
         </section>
+
 
         <!-- Statistics Dashboard -->
         <section class="section" id="stats">
@@ -336,167 +1114,391 @@
         </section>
     </div>
 
-    <footer>
-        <p>&copy; 2024 Bluebub - Marketplace Inovasi dan Data Laut Indonesia</p>
-        <p>Dikembangkan untuk masa depan ekonomi biru yang berkelanjutan</p>
-    </footer>
+    <footer class="footer-modern">
+    <div class="footer-container">
+        <!-- Brand Section -->
+        <div class="footer-section">
+            <div class="footer-logo">
+                <img src="image/logonew.png" alt="Bluebub Logo" class="footer-logo-img">
+                <h3>Bluebub</h3>
+            </div>
+            <p class="footer-tagline">
+                Platform inovasi dan data laut Indonesia untuk masa depan ekonomi biru yang berkelanjutan
+            </p>
+            <div class="footer-social">
+                <a href="https://www.instagram.com/nabilorazqa/" class="social-icon" title="Instagram">📷</a>
+                <a href="#" class="social-icon" title="Twitter">🐦</a>
+                <a href="www.linkedin.com/in/nabil-razqa-a2b058286" class="social-icon" title="LinkedIn">💼</a>
+                <a href="#" class="social-icon" title="YouTube">🎥</a>
+            </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="footer-section">
+            <h4>Navigasi</h4>
+            <ul class="footer-links">
+                <li><a href="index.html">🏠 Beranda</a></li>
+                <li><a href="map-banten.html">🗺️ Peta Maritim</a></li>
+                <li><a href="marketplace.html">🛒 Marketplace</a></li>
+                <li><a href="ai.html">🤖 AI Kolaborasi</a></li>
+                <li><a href="statistik.html">📊 Statistik</a></li>
+            </ul>
+        </div>
+        
+        <!-- Features -->
+        <div class="footer-section">
+            <h4>Fitur Utama</h4>
+            <ul class="footer-links">
+                <li><a href="statistik.html">🐟 Prediksi Stok Ikan</a></li>
+                <li><a href="#">🌊 Data Oseanografi</a></li>
+                <li><a href="statistik.html">📈 Analisis Perikanan</a></li>
+                <li><a href="map-banten.html">🎣 Zona Tangkap</a></li>
+            </ul>
+        </div>
+        
+        <!-- Contact Info -->
+        <div class="footer-section">
+            <h4>Kontak</h4>
+            <ul class="footer-contact">
+                <li>
+                    <span class="contact-icon">📧</span>
+                    <a href="mailto:info@bluebub.id">nabilrazqab@bluebub.id</a>
+                </li>
+                <li>
+                    <span class="contact-icon">📱</span>
+                    <a href="tel:+62123456789">+62 856 9725 0185</a>
+                </li>
+                <li>
+                    <span class="contact-icon">📍</span>
+                    <span>Banten, Indonesia</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Bottom Bar -->
+    <div class="footer-bottom">
+        <div class="footer-container">
+            <p>&copy; 2025 Bluebub - Marketplace Inovasi dan Data Laut Indonesia. All rights reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy Policy</a>
+                <span>•</span>
+                <a href="#">Terms of Service</a>
+                <span>•</span>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
+    </div>
+</footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-    <script>
-        // Initialize Map
-        function initMap() {
-            const map = L.map('map').setView([-2.5, 118], 5);
-            
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
+ <!-- ===== MAIN SCRIPT ===== -->
+<script>
+console.log('🚀 Bluebub Page Loading...');
 
-            // Add sample marine data points
-            const marinePoints = [
-                { lat: -6.2, lng: 106.8, title: 'Jakarta - Populasi Ikan Tinggi', value: '85%' },
-                { lat: -8.5, lng: 115.2, title: 'Bali - Zona Konservasi', value: '92%' },
-                { lat: -5.1, lng: 119.4, title: 'Makassar - Budidaya Rumput Laut', value: '78%' },
-                { lat: 1.5, lng: 124.8, title: 'Manado - Terumbu Karang', value: '88%' },
-                { lat: -0.9, lng: 131.3, title: 'Raja Ampat - Biodiversitas Tinggi', value: '95%' }
-            ];
+// ===== WAIT FOR DOM =====
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('✅ DOM Ready');
+    
+    // Initialize all functions
+    initializeAuth();
+    initializeNavbar();
+    loadPageContent();
+});
 
-            marinePoints.forEach(point => {
-                const marker = L.marker([point.lat, point.lng]).addTo(map);
-                marker.bindPopup(`<b>${point.title}</b><br>Kesehatan Laut: ${point.value}`);
-            });
+// ===== INITIALIZE AUTH =====
+function initializeAuth() {
+    console.log('🔐 Initializing auth...');
+    updateAuthLinks();
+}
+
+
+// ===== LOAD PAGE CONTENT =====
+function loadPageContent() {
+    console.log('📦 Loading page content...');
+    
+    // Load with delay to ensure DOM is ready
+    setTimeout(function() {
+        loadMarketplace();
+        loadAIRecommendations();
+        loadStatistics();
+    }, 500);
+}
+
+// ===== LOAD MARKETPLACE =====
+function loadMarketplace() {
+    try {
+        const products = [
+            {
+                name: 'Dataset Populasi Ikan Indonesia 2024',
+                category: 'Data & Riset',
+                price: 'Rp 2.500.000',
+                description: 'Dataset lengkap populasi ikan di perairan Indonesia dengan analisis biogeografi.'
+            },
+            {
+                name: 'Hasil Tangkapan Premium - Tuna Segar',
+                category: 'Produk Laut',
+                price: 'Rp 150.000/kg',
+                description: 'Ikan tuna segar langsung dari nelayan lokal dengan sertifikasi sustainable fishing.'
+            },
+            {
+                name: 'Proyek Riset: Coral Reef Restoration',
+                category: 'Inovasi',
+                price: 'Dana: Rp 50 Juta',
+                description: 'Proyek restorasi terumbu karang di Raja Ampat mencari investor dan kolaborator.'
+            },
+            {
+                name: 'Teknologi IoT untuk Monitoring Tambak',
+                category: 'Teknologi',
+                price: 'Rp 15.000.000',
+                description: 'Sistem monitoring tambak otomatis dengan sensor pH, suhu, dan oksigen terlarut.'
+            },
+            {
+                name: 'Rumput Laut Organik - Bulk Order',
+                category: 'Produk Laut',
+                price: 'Rp 25.000/kg',
+                description: 'Rumput laut organik berkualitas tinggi untuk industri makanan dan kosmetik.'
+            },
+            {
+                name: 'Analisis Prediksi Musim Tangkap Ikan',
+                category: 'AI & Analitik',
+                price: 'Rp 5.000.000',
+                description: 'Layanan prediksi musim tangkap menggunakan machine learning dan data satelit.'
+            }
+        ];
+
+        const grid = document.getElementById('marketplace-grid');
+        if (!grid) {
+            console.warn('⚠️ marketplace-grid element not found');
+            return;
         }
 
-        // Load Marketplace Products
-        function loadMarketplace() {
-            const products = [
-                {
-                    name: 'Dataset Populasi Ikan Indonesia 2024',
-                    category: 'Data & Riset',
-                    price: 'Rp 2.500.000',
-                    description: 'Dataset lengkap populasi ikan di perairan Indonesia dengan analisis biogeografi.'
-                },
-                {
-                    name: 'Hasil Tangkapan Premium - Tuna Segar',
-                    category: 'Produk Laut',
-                    price: 'Rp 150.000/kg',
-                    description: 'Ikan tuna segar langsung dari nelayan lokal dengan sertifikasi sustainable fishing.'
-                },
-                {
-                    name: 'Proyek Riset: Coral Reef Restoration',
-                    category: 'Inovasi',
-                    price: 'Dana: Rp 50 Juta',
-                    description: 'Proyek restorasi terumbu karang di Raja Ampat mencari investor dan kolaborator.'
-                },
-                {
-                    name: 'Teknologi IoT untuk Monitoring Tambak',
-                    category: 'Teknologi',
-                    price: 'Rp 15.000.000',
-                    description: 'Sistem monitoring tambak otomatis dengan sensor pH, suhu, dan oksigen terlarut.'
-                },
-                {
-                    name: 'Rumput Laut Organik - Bulk Order',
-                    category: 'Produk Laut',
-                    price: 'Rp 25.000/kg',
-                    description: 'Rumput laut organik berkualitas tinggi untuk industri makanan dan kosmetik.'
-                },
-                {
-                    name: 'Analisis Prediksi Musim Tangkap Ikan',
-                    category: 'AI & Analitik',
-                    price: 'Rp 5.000.000',
-                    description: 'Layanan prediksi musim tangkap menggunakan machine learning dan data satelit.'
-                }
-            ];
+        grid.innerHTML = products.map(function(product) {
+            return '<div class="product-card">' +
+                '<span class="category">' + product.category + '</span>' +
+                '<h3>' + product.name + '</h3>' +
+                '<p>' + product.description + '</p>' +
+                '<div class="price">' + product.price + '</div>' +
+                '</div>';
+        }).join('');
 
-            const grid = document.getElementById('marketplace-grid');
-            grid.innerHTML = products.map(product => `
-                <div class="product-card">
-                    <span class="category">${product.category}</span>
-                    <h3>${product.name}</h3>
-                    <p>${product.description}</p>
-                    <div class="price">${product.price}</div>
-                </div>
-            `).join('');
+        console.log('✅ Marketplace loaded:', products.length, 'products');
+    } catch(e) {
+        console.error('❌ Marketplace error:', e);
+    }
+}
+
+// ===== LOAD AI RECOMMENDATIONS =====
+function loadAIRecommendations() {
+    try {
+        const recommendations = [
+            {
+                title: 'Dr. Siti Rahayu - Peneliti Biologi Laut',
+                description: 'Kecocokan 95% berdasarkan minat riset terumbu karang dan konservasi laut.',
+                score: '95%'
+            },
+            {
+                title: 'PT. Maritim Teknologi Indonesia',
+                description: 'Peluang kolaborasi: Pengembangan sensor IoT untuk monitoring kualitas air laut.',
+                score: '88%'
+            },
+            {
+                title: 'Kelompok Nelayan Sejahtera Bali',
+                description: 'Potensi bisnis: Supply chain hasil tangkap berkelanjutan untuk pasar ekspor.',
+                score: '82%'
+            },
+            {
+                title: 'Startup OceanTech - Singapore',
+                description: 'Investor potensial untuk proyek AI prediksi cuaca maritim.',
+                score: '79%'
+            }
+        ];
+
+        const container = document.getElementById('ai-recommendations-container');
+        if (!container) {
+            console.warn('⚠️ ai-recommendations-container element not found');
+            return;
         }
 
-        // Load AI Recommendations
-        function loadAIRecommendations() {
-            const recommendations = [
-                {
-                    title: 'Dr. Siti Rahayu - Peneliti Biologi Laut',
-                    description: 'Kecocokan 95% berdasarkan minat riset terumbu karang dan konservasi laut.',
-                    score: '95%'
-                },
-                {
-                    title: 'PT. Maritim Teknologi Indonesia',
-                    description: 'Peluang kolaborasi: Pengembangan sensor IoT untuk monitoring kualitas air laut.',
-                    score: '88%'
-                },
-                {
-                    title: 'Kelompok Nelayan Sejahtera Bali',
-                    description: 'Potensi bisnis: Supply chain hasil tangkap berkelanjutan untuk pasar ekspor.',
-                    score: '82%'
-                },
-                {
-                    title: 'Startup OceanTech - Singapore',
-                    description: 'Investor potensial untuk proyek AI prediksi cuaca maritim.',
-                    score: '79%'
-                }
-            ];
+        container.innerHTML = recommendations.map(function(rec) {
+            return '<div class="ai-card">' +
+                '<h4>' + rec.title + '</h4>' +
+                '<p>' + rec.description + '</p>' +
+                '<span class="match-score">Match: ' + rec.score + '</span>' +
+                '</div>';
+        }).join('');
 
-            const container = document.getElementById('ai-recommendations');
-            container.innerHTML = recommendations.map(rec => `
-                <div class="ai-card">
-                    <h4>${rec.title}</h4>
-                    <p>${rec.description}</p>
-                    <span class="match-score">Match: ${rec.score}</span>
-                </div>
-            `).join('');
+        console.log('✅ AI Recommendations loaded:', recommendations.length, 'items');
+    } catch(e) {
+        console.error('❌ AI Recommendations error:', e);
+    }
+}
+
+// ===== LOAD STATISTICS =====
+function loadStatistics() {
+    try {
+        const stats = [
+            { number: '17.504', label: 'Pulau di Indonesia' },
+            { number: '8.5 Jt km²', label: 'Luas Laut Indonesia' },
+            { number: '3.500+', label: 'Spesies Ikan' },
+            { number: '76%', label: 'Terumbu Karang Dunia' },
+            { number: 'Rp 1.5 T', label: 'Nilai Ekspor Perikanan' },
+            { number: '12 Juta', label: 'Nelayan Indonesia' }
+        ];
+
+        const grid = document.getElementById('stats-grid');
+        if (!grid) {
+            console.warn('⚠️ stats-grid element not found');
+            return;
         }
 
-        // Load Statistics
-        function loadStatistics() {
-            const stats = [
-                { number: '17.504', label: 'Pulau di Indonesia' },
-                { number: '8.5 Jt km²', label: 'Luas Laut Indonesia' },
-                { number: '3.500+', label: 'Spesies Ikan' },
-                { number: '76%', label: 'Terumbu Karang Dunia' },
-                { number: 'Rp 1.5 T', label: 'Nilai Ekspor Perikanan' },
-                { number: '12 Juta', label: 'Nelayan Indonesia' }
-            ];
+        grid.innerHTML = stats.map(function(stat) {
+            return '<div class="stat-card">' +
+                '<div class="number">' + stat.number + '</div>' +
+                '<div class="label">' + stat.label + '</div>' +
+                '</div>';
+        }).join('');
 
-            const grid = document.getElementById('stats-grid');
-            grid.innerHTML = stats.map(stat => `
-                <div class="stat-card">
-                    <div class="number">${stat.number}</div>
-                    <div class="label">${stat.label}</div>
-                </div>
-            `).join('');
+        console.log('✅ Statistics loaded:', stats.length, 'stats');
+    } catch(e) {
+        console.error('❌ Statistics error:', e);
+    }
+}
+
+// ===== SMOOTH SCROLL =====
+function scrollToSection(sectionId) {
+    const element = document.getElementById(sectionId);
+    if(element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+        console.log('📍 Scrolled to:', sectionId);
+    }
+}
+
+// ===== AI CHAT FUNCTIONALITY =====
+function sendAIMessage() {
+    const input = document.getElementById('ai-input');
+    if (!input) return;
+    
+    const question = input.value.trim();
+    
+    if (!question) return;
+    
+    // Display user message
+    addAIMessage(question, 'user');
+    input.value = '';
+    
+    // Show typing indicator
+    showTypingIndicator();
+    
+    // Simulate AI response
+    setTimeout(() => {
+        hideTypingIndicator();
+        const response = getAIResponse(question);
+        addAIMessage(response, 'bot');
+    }, 1500);
+}
+
+function askQuestion(question) {
+    const input = document.getElementById('ai-input');
+    if (!input) return;
+    
+    input.value = question;
+    sendAIMessage();
+}
+
+function addAIMessage(content, type) {
+    const messagesContainer = document.getElementById('ai-messages');
+    if (!messagesContainer) return;
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `ai-message ${type}`;
+    
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar';
+    avatar.textContent = type === 'bot' ? '🌊' : '👤';
+    
+    const messageContent = document.createElement('div');
+    messageContent.className = 'message-content';
+    
+    if (type === 'bot') {
+        messageContent.innerHTML = `<p>${content}</p>`;
+    } else {
+        messageContent.innerHTML = `<strong>Anda:</strong><p>${content}</p>`;
+    }
+    
+    if (type === 'bot') {
+        messageDiv.appendChild(avatar);
+        messageDiv.appendChild(messageContent);
+    } else {
+        messageDiv.appendChild(messageContent);
+        messageDiv.appendChild(avatar);
+    }
+    
+    messagesContainer.appendChild(messageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+function showTypingIndicator() {
+    const messagesContainer = document.getElementById('ai-messages');
+    if (!messagesContainer) return;
+    
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'ai-message bot typing';
+    typingDiv.id = 'typing-indicator';
+    
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar';
+    avatar.textContent = '🌊';
+    
+    const indicator = document.createElement('div');
+    indicator.className = 'typing-indicator';
+    indicator.innerHTML = '<span></span><span></span><span></span>';
+    
+    typingDiv.appendChild(avatar);
+    typingDiv.appendChild(indicator);
+    
+    messagesContainer.appendChild(typingDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+function hideTypingIndicator() {
+    const indicator = document.getElementById('typing-indicator');
+    if (indicator) {
+        indicator.remove();
+    }
+}
+
+function getAIResponse(question) {
+    const responses = {
+        'apa itu ekonomi biru': 'Ekonomi biru adalah konsep pembangunan ekonomi berkelanjutan yang memanfaatkan sumber daya laut dan pesisir. Di Indonesia, ekonomi biru mencakup perikanan, pariwisata bahari, energi terbarukan dari laut, dan bioteknologi kelautan. 🌊',
+        
+        'data perikanan indonesia': 'Indonesia memiliki:\n• 3.500+ spesies ikan\n• 8.5 juta km² luas laut\n• Nilai ekspor perikanan Rp 1.5 Triliun/tahun\n• 12 juta nelayan\n• Produksi perikanan 24 juta ton/tahun 🐟',
+        
+        'cara budidaya rumput laut': 'Cara budidaya rumput laut:\n1. Pilih lokasi dengan arus sedang\n2. Gunakan metode longline atau rakit\n3. Bibit berkualitas umur 20-25 hari\n4. Jarak tanam 20-25 cm\n5. Panen setelah 45-60 hari\n6. Keringkan dengan baik\n\nRumput laut dapat tumbuh optimal di suhu 20-28°C. 🌿',
+        
+        'default': 'Terima kasih atas pertanyaannya! Saya sedang belajar untuk memberikan jawaban yang lebih baik. Untuk informasi lebih detail, Anda bisa mengunjungi section Marketplace atau hubungi ahli kami. 💙'
+    };
+    
+    const lowerQuestion = question.toLowerCase();
+    
+    for (const [key, value] of Object.entries(responses)) {
+        if (lowerQuestion.includes(key)) {
+            return value;
         }
+    }
+    
+    return responses['default'];
+}
 
-        // Smooth scroll function
-        function scrollToSection(sectionId) {
-            document.getElementById(sectionId).scrollIntoView({ 
-                behavior: 'smooth' 
-            });
-        }
+console.log('✅ All functions loaded');
+</script>
 
-        // Initialize everything when page loads
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                initMap();
-                loadMarketplace();
-                loadAIRecommendations();
-                loadStatistics();
-            }, 500);
-        });
-        <!-- Midtrans Snap -->
-<script type="text/javascript"
-    src="https://app.sandbox.midtrans.com/snap/snap.js"
-    data-client-key="YOUR_MIDTRANS_CLIENT_KEY"></script>
+<!-- External Scripts (Load after main script) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/auth.js"></script>
+    <script src="js/sweetalert-helper.js"></script>
+    <script src="js/navbar.js"></script>
 
-<!-- API Integration -->
-<script src="js/api.js"></script>
-<script src="js/app.js"></script>
-    </script>
 </body>
 </html>

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bluebub Chatbot - Prediksi Ikan</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            height: 85vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            background: linear-gradient(135deg, #088395, #05445e);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .chat-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .chat-header p {
+            font-size: 0.95rem;
+            opacity: 0.95;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+        
+        .message {
+            margin-bottom: 16px;
+            display: flex;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .message.user {
+            justify-content: flex-end;
+        }
+        
+        .message-content {
+            max-width: 75%;
+            padding: 14px 18px;
+            border-radius: 18px;
+            word-wrap: break-word;
+            line-height: 1.5;
+        }
+        
+        .message.bot .message-content {
+            background: white;
+            color: #2d3748;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .message.user .message-content {
+            background: linear-gradient(135deg, #088395, #05445e);
+            color: white;
+            box-shadow: 0 2px 8px rgba(8, 131, 149, 0.3);
+        }
+        
+        .chat-input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 12px;
+        }
+        
+        #user-input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        #user-input:focus {
+            border-color: #088395;
+            box-shadow: 0 0 0 3px rgba(8, 131, 149, 0.1);
+        }
+        
+        #send-btn {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #088395, #05445e);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(8, 131, 149, 0.3);
+        }
+        
+        #send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(8, 131, 149, 0.4);
+        }
+        
+        #send-btn:active {
+            transform: translateY(0);
+        }
+        
+        #send-btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .loading-dots {
+            display: inline-flex;
+            gap: 4px;
+        }
+        
+        .loading-dot {
+            width: 8px;
+            height: 8px;
+            background: #088395;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+        
+        .loading-dot:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: scale(0);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .quick-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 15px 20px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .suggestion-btn {
+            padding: 8px 16px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            color: #2d3748;
+        }
+        
+        .suggestion-btn:hover {
+            background: #edf2f7;
+            border-color: #088395;
+            color: #088395;
+        }
+        
+        .error-message {
+            padding: 12px;
+            background: #fee;
+            border: 1px solid #fcc;
+            border-radius: 8px;
+            color: #c00;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar" id="navbar">
+        <a href="/" class="navbar-brand">
+            <img src="/image/logonew.png" class="navbar-logo" alt="Bluebub Logo">
+            <span class="brand-text">Bluebub</span>
+        </a>
+    
+        <div class="navbar-menu">
+            <a href="/index.html" class="nav-link">Beranda</a>
+            <a href="/.html" class="nav-link">Peta</a>
+            <a href="/marketplace.html" class="nav-link">Marketplace</a>
+            <a href="/checkout.html" class="nav-link">Cart</a>
+            <a href="/ai.html" class="nav-link">AI Kolaborasi</a>
+            <a href="/statistik.html" class="nav-link">Statistik</a>
+            <a href="/diskusi.html" class="nav-link">Diskusi</a>
+        </div>
+        <div id="auth-links"></div>
+    </nav>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>
+                🐟 Bluebub Chatbot
+                <span class="status-indicator"></span>
+            </h1>
+            <p>Asisten Cerdas Prediksi Stok Ikan</p>
+        </div>
+        
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot">
+                <div class="message-content">
+                    <strong>👋 Selamat datang di Bluebub Chatbot!</strong><br><br>
+                    Saya dapat membantu memprediksi stok ikan berdasarkan data historis menggunakan machine learning.<br><br>
+                    <strong>Contoh pertanyaan:</strong><br>
+                    • "Prediksi ikan Layang"<br>
+                    • "Prediksi stok ikan Teri"<br>
+                    • "Berapa stok ikan Tongkol?"
+                </div>
+            </div>
+        </div>
+        
+        <div class="quick-suggestions">
+            <button class="suggestion-btn" onclick="sendQuickMessage('Prediksi ikan Layang')">🐟 Prediksi Layang</button>
+            <button class="suggestion-btn" onclick="sendQuickMessage('Prediksi ikan Teri')">🐟 Prediksi Teri</button>
+            <button class="suggestion-btn" onclick="sendQuickMessage('Prediksi ikan Tongkol')">🐟 Prediksi Tongkol</button>
+        </div>
+        
+        <div class="chat-input-container">
+            <input 
+                type="text" 
+                id="user-input" 
+                placeholder="Ketik pesan Anda di sini..." 
+                onkeypress="handleKeyPress(event)"
+            >
+            <button id="send-btn" onclick="sendMessage()">Kirim</button>
+        </div>
+    </div>
+
+    <footer class="footer-modern">
+    <div class="footer-container">
+        <!-- Brand Section -->
+        <div class="footer-section">
+            <div class="footer-logo">
+                <img src="image/logonew.png" alt="Bluebub Logo" class="footer-logo-img">
+                <h3>Bluebub</h3>
+            </div>
+            <p class="footer-tagline">
+                Platform inovasi dan data laut Indonesia untuk masa depan ekonomi biru yang berkelanjutan
+            </p>
+            <div class="footer-social">
+                <a href="https://www.instagram.com/nabilorazqa/" class="social-icon" title="Instagram">📷</a>
+                <a href="#" class="social-icon" title="Twitter">🐦</a>
+                <a href="www.linkedin.com/in/nabil-razqa-a2b058286" class="social-icon" title="LinkedIn">💼</a>
+                <a href="#" class="social-icon" title="YouTube">🎥</a>
+            </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="footer-section">
+            <h4>Navigasi</h4>
+            <ul class="footer-links">
+                <li><a href="index.html">🏠 Beranda</a></li>
+                <li><a href="map-banten.html">🗺️ Peta Maritim</a></li>
+                <li><a href="marketplace.html">🛒 Marketplace</a></li>
+                <li><a href="ai.html">🤖 AI Kolaborasi</a></li>
+                <li><a href="statistik.html">📊 Statistik</a></li>
+            </ul>
+        </div>
+        
+        <!-- Features -->
+        <div class="footer-section">
+            <h4>Fitur Utama</h4>
+            <ul class="footer-links">
+                <li><a href="statistik.html">🐟 Prediksi Stok Ikan</a></li>
+                <li><a href="#">🌊 Data Oseanografi</a></li>
+                <li><a href="statistik.html">📈 Analisis Perikanan</a></li>
+                <li><a href="map-banten.html">🎣 Zona Tangkap</a></li>
+            </ul>
+        </div>
+        
+        <!-- Contact Info -->
+        <div class="footer-section">
+            <h4>Kontak</h4>
+            <ul class="footer-contact">
+                <li>
+                    <span class="contact-icon">📧</span>
+                    <a href="mailto:info@bluebub.id">nabilrazqab@bluebub.id</a>
+                </li>
+                <li>
+                    <span class="contact-icon">📱</span>
+                    <a href="tel:+62123456789">+62 856 9725 0185</a>
+                </li>
+                <li>
+                    <span class="contact-icon">📍</span>
+                    <span>Banten, Indonesia</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Bottom Bar -->
+    <div class="footer-bottom">
+        <div class="footer-container">
+            <p>&copy; 2025 Bluebub - Marketplace Inovasi dan Data Laut Indonesia. All rights reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy Policy</a>
+                <span>•</span>
+                <a href="#">Terms of Service</a>
+                <span>•</span>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
+    </div>
+</footer>
+    
+    <script>
+        const BACKEND_URL = 'http://localhost:3000';
+        let isLoading = false;
+        
+        function addMessage(text, isUser = false) {
+            const messagesDiv = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.innerHTML = text.replace(/\n/g, '<br>');
+            
+            messageDiv.appendChild(contentDiv);
+            messagesDiv.appendChild(messageDiv);
+            
+            // Smooth scroll to bottom
+            messagesDiv.scrollTo({
+                top: messagesDiv.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+        
+        function showLoading() {
+            const messagesDiv = document.getElementById('chat-messages');
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message bot';
+            loadingDiv.id = 'loading-message';
+            loadingDiv.innerHTML = `
+                <div class="message-content">
+                    <div class="loading-dots">
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                    </div>
+                </div>
+            `;
+            messagesDiv.appendChild(loadingDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        function hideLoading() {
+            const loadingDiv = document.getElementById('loading-message');
+            if (loadingDiv) {
+                loadingDiv.remove();
+            }
+        }
+        
+        function showError(message) {
+            const messagesDiv = document.getElementById('chat-messages');
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'message bot';
+            errorDiv.innerHTML = `
+                <div class="message-content">
+                    <div class="error-message">
+                        ❌ <strong>Error:</strong> ${message}
+                    </div>
+                    <small>Tips: Pastikan backend dan ML service sudah running.</small>
+                </div>
+            `;
+            messagesDiv.appendChild(errorDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        async function sendMessage() {
+            if (isLoading) return;
+            
+            const input = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Disable input
+            isLoading = true;
+            input.disabled = true;
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Mengirim...';
+            
+            // Display user message
+            addMessage(message, true);
+            input.value = '';
+            
+            // Show loading
+            showLoading();
+            
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/chatbot/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message })
+                });
+                
+                hideLoading();
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    addMessage(data.bot_response, false);
+                } else {
+                    showError(data.error || 'Terjadi kesalahan tidak terduga');
+                }
+                
+            } catch (error) {
+                hideLoading();
+                console.error('Error:', error);
+                
+                if (error.message.includes('Failed to fetch')) {
+                    showError('Tidak dapat terhubung ke server.<br>Pastikan backend sudah running di http://localhost:3000');
+                } else {
+                    showError(error.message);
+                }
+            } finally {
+                // Re-enable input
+                isLoading = false;
+                input.disabled = false;
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Kirim';
+                input.focus();
+            }
+        }
+        
+        function sendQuickMessage(message) {
+            const input = document.getElementById('user-input');
+            input.value = message;
+            sendMessage();
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !isLoading) {
+                sendMessage();
+            }
+        }
+        
+        // Check backend status on load
+        window.addEventListener('load', async () => {
+            try {
+                const response = await fetch(`${BACKEND_URL}/health`);
+                if (response.ok) {
+                    console.log('✅ Backend connected');
+                } else {
+                    console.warn('⚠️ Backend not responding properly');
+                }
+            } catch (error) {
+                console.error('❌ Backend not reachable:', error);
+                showError('Backend tidak dapat dijangkau. Pastikan backend sudah running.');
+            }
+        });
+    </script>
+    <script src="js/sweetalert-helper.js"></script>
+<script src="js/auth.js"></script>
+        <script src="js/navbar.js"></script>
+
+</body>
+</html>

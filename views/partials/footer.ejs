@@ -1,0 +1,157 @@
+<!-- HTML -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3 class="footer-title">About Us</h3>
+            <p>Plastic Ocean Rescue is dedicated to protecting our oceans from plastic pollution through education, innovation, and action.</p>
+        </div>
+        
+        <div class="footer-section">
+            <h3 class="footer-title">Quick Links</h3>
+            <ul class="footer-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="/auth/information">Information</a></li>
+                <li><a href="/auth/map">Maps</a></li>
+                <li><a href="/auth/tantangan">Challenge</a></li>
+                <li><a href="/auth/report">Discussion</a></li>
+            </ul>
+        </div>
+        
+        <div class="footer-section">
+            <h3 class="footer-title">Contact Us</h3>
+            <ul class="footer-contact">
+                <li>Email: planer.upi@gmail.com</li>
+                <li>Phone: +62 856 9725 0185</li>
+                <li>Address: - </li>
+            </ul>
+        </div>
+        
+        <div class="footer-section">
+            <h3 class="footer-title">Newsletter</h3>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Enter your email">
+                <button type="submit">Subscribe</button>
+            </form>
+            <div class="social-links">
+                <a href="#" class="social-icon">Twitter</a>
+                <a href="https://www.instagram.com/nabilorazqa/" class="social-icon">Instagram</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        <p>&copy; 2024 Plastic Ocean Rescue. All rights reserved.</p>
+    </div>
+</footer>
+
+<!-- CSS -->
+<style>
+.footer {
+    background-color: #189AB4; /* Teal/turquoise base color */
+    color: white;
+    padding: 30px 10px 5px 10px;
+    font-family: Arial, sans-serif;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    padding: 0 20px;
+}
+
+.footer-section {
+    margin-bottom: 30px;
+}
+
+.footer-title {
+    color: white;
+    font-size: 20px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.footer-links,
+.footer-contact {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li,
+.footer-contact li {
+    margin-bottom: 12px;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #E0FFFF; /* Light cyan for hover effect */
+}
+
+.newsletter-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 4px;
+}
+
+.newsletter-form button {
+    background-color: #008B8B; /* Darker teal */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.newsletter-form button:hover {
+    background-color: #006666; /* Even darker teal for hover */
+}
+
+.social-links {
+    margin-top: 20px;
+}
+
+.social-icon {
+    color: white;
+    text-decoration: none;
+    margin-right: 15px;
+    transition: color 0.3s ease;
+}
+
+.social-icon:hover {
+    color: #E0FFFF; /* Light cyan for hover effect */
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-section {
+        text-align: center;
+    }
+}
+</style>

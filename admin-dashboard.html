@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Bluebub</title>
+    <link rel="icon" type="image/png" href="image/logonew.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <link rel="stylesheet" href="css/admin.css">
+
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: linear-gradient(180deg, #05445e 0%, #088395 100%);
+            color: white;
+            transition: all 0.3s;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar.collapsed {
+            width: 70px;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .sidebar-logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .sidebar.collapsed .sidebar-text {
+            display: none;
+        }
+
+        .toggle-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .toggle-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 1rem 0;
+        }
+
+        .menu-item {
+            padding: 0;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .menu-link:hover, .menu-link.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left: 4px solid #40e0d0;
+        }
+
+        .menu-icon {
+            font-size: 1.3rem;
+            min-width: 25px;
+        }
+
+        .sidebar.collapsed .menu-text {
+            display: none;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            margin-left: 260px;
+            transition: margin-left 0.3s;
+            min-height: 100vh;
+        }
+
+        .main-content.expanded {
+            margin-left: 70px;
+        }
+
+        /* Top Header */
+        .top-header {
+            background: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title h1 {
+            color: #05445e;
+            font-size: 1.8rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding: 10px 15px 10px 40px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            width: 300px;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #088395;
+            width: 350px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .notification-icon {
+            position: relative;
+            font-size: 1.5rem;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s;
+        }
+
+        .admin-profile:hover {
+            background: #f4f6f9;
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #40e0d0, #088395);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 2rem;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #40e0d0, #088395);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 25px rgba(8, 131, 149, 0.2);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-icon.blue {
+            background: linear-gradient(135deg, #40e0d0, #088395);
+            color: white;
+        }
+
+        .stat-icon.green {
+            background: linear-gradient(135deg, #84fab0, #8fd3f4);
+            color: #05445e;
+        }
+
+        .stat-icon.orange {
+            background: linear-gradient(135deg, #fa709a, #fee140);
+            color: white;
+        }
+
+        .stat-icon.purple {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            color: #05445e;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #05445e;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .stat-change {
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .stat-change.positive {
+            color: #28a745;
+        }
+
+        .stat-change.negative {
+            color: #dc3545;
+        }
+
+        /* Data Table */
+        .data-table-container {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .table-header h2 {
+            color: #05445e;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #40e0d0, #088395);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(8, 131, 149, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 2px solid #088395;
+            color: #088395;
+        }
+
+        .btn-secondary:hover {
+            background: #088395;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+
+        /* Table Styles */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow-x: auto;
+            display: block;
+        }
+
+        .data-table thead {
+            background: #f8f9fa;
+        }
+
+        .data-table th {
+            padding: 1rem;
+            text-align: left;
+            color: #05445e;
+            font-weight: 600;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            color: #666;
+        }
+
+        .data-table tbody tr {
+            transition: all 0.3s;
+        }
+
+        .data-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-badge.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-badge.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-badge.active {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .modal-header h2 {
+            color: #05445e;
+        }
+
+        .close-modal {
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+            background: none;
+            border: none;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #05445e;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input, 
+        .form-group textarea, 
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus, 
+        .form-group textarea:focus, 
+        .form-group select:focus {
+            outline: none;
+            border-color: #088395;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Charts Container */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+
+        .chart-card h3 {
+            color: #05445e;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .search-box input {
+                width: 200px;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .page-btn {
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .page-btn:hover, .page-btn.active {
+            background: #088395;
+            color: white;
+            border-color: #088395;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="image/logonew.png" alt="Bluebub">
+                <span class="sidebar-text">Bluebub Admin</span>
+            </div>
+            <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="menu-item">
+                <a class="menu-link active" onclick="showSection('dashboard')">
+                    <span class="menu-icon">📊</span>
+                    <span class="menu-text">Dashboard</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a class="menu-link" onclick="showSection('products')">
+                    <span class="menu-icon">📦</span>
+                    <span class="menu-text">Kelola Produk</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a class="menu-link" onclick="showSection('orders')">
+                    <span class="menu-icon">🛒</span>
+                    <span class="menu-text">Kelola Order</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a class="menu-link" onclick="showSection('users')">
+                    <span class="menu-icon">👥</span>
+                    <span class="menu-text">Kelola User</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a class="menu-link" onclick="showSection('analytics')">
+                    <span class="menu-icon">📈</span>
+                    <span class="menu-text">Analitik</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a class="menu-link" onclick="showSection('settings')">
+                    <span class="menu-icon">⚙️</span>
+                    <span class="menu-text">Pengaturan</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a class="menu-link" href="/" style="margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <span class="menu-icon">🏠</span>
+                    <span class="menu-text">Kembali ke Website</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-title">
+                <h1 id="page-title">Dashboard</h1>
+            </div>
+            <div class="header-actions">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="Cari...">
+                </div>
+                <div class="notification-icon">
+                    🔔
+                    <span class="notification-badge">5</span>
+                </div>
+                <div class="admin-profile">
+                    <div class="profile-avatar">A</div>
+                    <div>
+                        <div style="font-weight: 600; color: #05445e;">Admin</div>
+                        <div style="font-size: 0.85rem; color: #999;">Super Admin</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Dashboard Section -->
+            <section class="content-section active" id="section-dashboard">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="total-products">0</div>
+                                <div class="stat-label">Total Produk</div>
+                            </div>
+                            <div class="stat-icon blue">📦</div>
+                        </div>
+                        <div class="stat-change positive">↑ 12% dari bulan lalu</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="total-orders">0</div>
+                                <div class="stat-label">Total Order</div>
+                            </div>
+                            <div class="stat-icon green">🛒</div>
+                        </div>
+                        <div class="stat-change positive">↑ 8% dari bulan lalu</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="total-users">0</div>
+                                <div class="stat-label">Total User</div>
+                            </div>
+                            <div class="stat-icon orange">👥</div>
+                        </div>
+                        <div class="stat-change positive">↑ 15% dari bulan lalu</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="total-revenue">Rp 0</div>
+                                <div class="stat-label">Total Pendapatan</div>
+                            </div>
+                            <div class="stat-icon purple">💰</div>
+                        </div>
+                        <div class="stat-change positive">↑ 20% dari bulan lalu</div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="data-table-container">
+                    <div class="table-header">
+                        <h2>Order Terbaru</h2>
+                        <button class="btn btn-secondary" onclick="showSection('orders')">Lihat Semua</button>
+                    </div>
+                    <div id="recent-orders-table"></div>
+                </div>
+
+                <!-- Charts -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3>Penjualan Bulanan</h3>
+                        <div style="height: 250px; display: flex; align-items: center; justify-content: center; color: #999;">
+                            📊 Chart akan ditampilkan di sini (gunakan Chart.js)
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Kategori Produk Terpopuler</h3>
+                        <div style="height: 250px; display: flex; align-items: center; justify-content: center; color: #999;">
+                            📈 Chart akan ditampilkan di sini
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Products Section -->
+            <section class="content-section" id="section-products">
+                <div class="data-table-container">
+                    <div class="table-header">
+                        <h2>Kelola Produk</h2>
+                        <div class="table-actions">
+                            <button class="btn btn-secondary" onclick="exportData('products')">📥 Export</button>
+                            <button class="btn btn-primary" onclick="openAddProductModal()">➕ Tambah Produk</button>
+                        </div>
+                    </div>
+                    <div id="products-table"></div>
+                </div>
+            </section>
+
+            <!-- Orders Section -->
+            <section class="content-section" id="section-orders">
+                <div class="data-table-container">
+                    <div class="table-header">
+                        <h2>Kelola Order</h2>
+                        <div class="table-actions">
+                            <select class="btn btn-secondary" onchange="filterOrders(this.value)" style="padding: 10px 15px;">
+                                <option value="all">Semua Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                            <button class="btn btn-secondary" onclick="exportData('orders')">📥 Export</button>
+                        </div>
+                    </div>
+                    <div id="orders-table"></div>
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section class="content-section" id="section-users">
+                <div class="data-table-container">
+                    <div class="table-header">
+                        <h2>Kelola User</h2>
+                        <button class="btn btn-secondary" onclick="exportData('users')">📥 Export</button>
+                    </div>
+                    <div id="users-table"></div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section class="content-section" id="section-analytics">
+                <h2 style="color: #05445e; margin-bottom: 2rem;">Analitik & Laporan</h2>
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3>Grafik Penjualan 6 Bulan Terakhir</h3>
+                        <div style="height: 300px; display: flex; align-items: center; justify-content: center; color: #999;">
+                            📊 Chart.js Integration
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Top 5 Produk Terlaris</h3>
+                        <div style="height: 300px; display: flex; align-items: center; justify-content: center; color: #999;">
+                            📈 Bar Chart
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>User Activity</h3>
+                        <div style="height: 300px; display: flex; align-items: center; justify-content: center; color: #999;">
+                            📉 Line Chart
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Revenue by Category</h3>
+                        <div style="height: 300px; display: flex; align-items: center; justify-content: center; color: #999;">
+                            🥧 Pie Chart
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section class="content-section" id="section-settings">
+                <div class="data-table-container">
+                    <h2>Pengaturan Sistem</h2>
+                    <p style="color: #666; margin-top: 1rem;">Kelola pengaturan aplikasi, konfigurasi pembayaran, dan preferensi sistem.</p>
+                    <div style="margin-top: 2rem;">
+                        <button class="btn btn-primary">💾 Simpan Pengaturan</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Add/Edit Product Modal -->
+    <div class="modal" id="product-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="product-modal-title">Tambah Produk</h2>
+                <button class="close-modal" onclick="closeProductModal()">×</button>
+            </div>
+            <form id="product-form">
+                <input type="hidden" id="product-id">
+                <div class="form-group">
+                    <label>Nama Produk *</label>
+                    <input type="text" id="product-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Kategori *</label>
+                    <select id="product-category" required>
+                        <option value="">Pilih Kategori</option>
+                        <option value="Hasil Laut">🐟 Hasil Laut</option>
+                        <option value="Teknologi">💻 Teknologi Maritim</option>
+                        <option value="Dataset">📊 Dataset & Riset</option>
+                        <option value="Inovasi">🚀 Inovasi & Proyek</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Harga (Rp) *</label>
+                    <input type="number" id="product-price" required>
+                </div>
+                <div class="form-group">
+                    <label>Unit</label>
+                    <input type="text" id="product-unit" placeholder="per kg, per unit, dll">
+                </div>
+                <div class="form-group">
+                    <label>Stok</label>
+                    <input type="number" id="product-stock">
+                </div>
+                <div class="form-group">
+                    <label>Lokasi</label>
+                    <input type="text" id="product-location">
+                </div>
+                <div class="form-group">
+                    <label>Penjual</label>
+                    <input type="text" id="product-seller">
+                </div>
+                <div class="form-group">
+                    <label>Deskripsi *</label>
+                    <textarea id="product-description" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">💾 Simpan Produk</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Order Modal -->
+    <div class="modal" id="order-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Detail Order</h2>
+                <button class="close-modal" onclick="closeOrderModal()">×</button>
+            </div>
+            <div id="order-details"></div>
+        </div>
+    </div>
+
+    <footer class="footer-modern">
+    <div class="footer-container">
+        <!-- Brand Section -->
+        <div class="footer-section">
+            <div class="footer-logo">
+                <img src="image/logonew.png" alt="Bluebub Logo" class="footer-logo-img">
+                <h3>Bluebub</h3>
+            </div>
+            <p class="footer-tagline">
+                Platform inovasi dan data laut Indonesia untuk masa depan ekonomi biru yang berkelanjutan
+            </p>
+            <div class="footer-social">
+                <a href="https://www.instagram.com/nabilorazqa/" class="social-icon" title="Instagram">📷</a>
+                <a href="#" class="social-icon" title="Twitter">🐦</a>
+                <a href="www.linkedin.com/in/nabil-razqa-a2b058286" class="social-icon" title="LinkedIn">💼</a>
+                <a href="#" class="social-icon" title="YouTube">🎥</a>
+            </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="footer-section">
+            <h4>Navigasi</h4>
+            <ul class="footer-links">
+                <li><a href="index.html">🏠 Beranda</a></li>
+                <li><a href="map-banten.html">🗺️ Peta Maritim</a></li>
+                <li><a href="marketplace.html">🛒 Marketplace</a></li>
+                <li><a href="ai.html">🤖 AI Kolaborasi</a></li>
+                <li><a href="statistik.html">📊 Statistik</a></li>
+            </ul>
+        </div>
+        
+        <!-- Features -->
+        <div class="footer-section">
+            <h4>Fitur Utama</h4>
+            <ul class="footer-links">
+                <li><a href="statistik.html">🐟 Prediksi Stok Ikan</a></li>
+                <li><a href="#">🌊 Data Oseanografi</a></li>
+                <li><a href="statistik.html">📈 Analisis Perikanan</a></li>
+                <li><a href="map-banten.html">🎣 Zona Tangkap</a></li>
+            </ul>
+        </div>
+        
+        <!-- Contact Info -->
+        <div class="footer-section">
+            <h4>Kontak</h4>
+            <ul class="footer-contact">
+                <li>
+                    <span class="contact-icon">📧</span>
+                    <a href="mailto:info@bluebub.id">nabilrazqab@bluebub.id</a>
+                </li>
+                <li>
+                    <span class="contact-icon">📱</span>
+                    <a href="tel:+62123456789">+62 856 9725 0185</a>
+                </li>
+                <li>
+                    <span class="contact-icon">📍</span>
+                    <span>Banten, Indonesia</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Bottom Bar -->
+    <div class="footer-bottom">
+        <div class="footer-container">
+            <p>&copy; 2025 Bluebub - Marketplace Inovasi dan Data Laut Indonesia. All rights reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy Policy</a>
+                <span>•</span>
+                <a href="#">Terms of Service</a>
+                <span>•</span>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
+    </div>
+</footer>
+    <script>
+        // Initialize
+        let products = [];
+        let orders = [];
+        let users = [];
+        let currentEditProductId = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            updateDashboardStats();
+        });
+
+        function loadData() {
+            // Load from localStorage
+            products = JSON.parse(localStorage.getItem('bluebub_products') || '[]');
+            orders = JSON.parse(localStorage.getItem('bluebub_orders') || '[]');
+            users = JSON.parse(localStorage.getItem('bluebub_users') || '[]');
+
+            renderProductsTable();
+            renderOrdersTable();
+            renderUsersTable();
+            renderRecentOrders();
+        }
+
+        function updateDashboardStats() {
+            document.getElementById('total-products').textContent = products.length;
+            document.getElementById('total-orders').textContent = orders.length;
+            document.getElementById('total-users').textContent = users.length;
+            
+            const totalRevenue = orders.reduce((sum, order) => sum + (order.total || 0), 0);
+            document.getElementById('total-revenue').textContent = 'Rp ' + formatPrice(totalRevenue);
+        }
+
+        function formatPrice(price) {
+            return Math.round(price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        // Sidebar Toggle
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+            document.getElementById('mainContent').classList.toggle('expanded');
+        }
+
+        // Section Navigation
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all menu links
+            document.querySelectorAll('.menu-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById('section-' + sectionName).classList.add('active');
+
+            // Add active class to clicked menu link
+            event.target.closest('.menu-link').classList.add('active');
+
+            // Update page title
+            const titles = {
+                'dashboard': 'Dashboard',
+                'products': 'Kelola Produk',
+                'orders': 'Kelola Order',
+                'users': 'Kelola User',
+                'analytics': 'Analitik & Laporan',
+                'settings': 'Pengaturan'
+            };
+            document.getElementById('page-title').textContent = titles[sectionName] || 'Dashboard';
+        }
+
+        // Products Table
+        function renderProductsTable() {
+            const container = document.getElementById('products-table');
+            
+            if (products.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📦</div>
+                        <h3>Belum ada produk</h3>
+                        <p>Klik tombol "Tambah Produk" untuk menambahkan produk baru</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nama Produk</th>
+                            <th>Kategori</th>
+                            <th>Harga</th>
+                            <th>Stok</th>
+                            <th>Penjual</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${products.map(product => `
+                            <tr>
+                                <td>#${product.id}</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span style="font-size: 1.5rem;">${product.image || '📦'}</span>
+                                        <strong>${product.name}</strong>
+                                    </div>
+                                </td>
+                                <td>${product.category}</td>
+                                <td>Rp ${formatPrice(product.price)}${product.unit || ''}</td>
+                                <td>${product.stock || '-'}</td>
+                                <td>${product.seller}</td>
+                                <td><span class="status-badge active">Active</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary" onclick="editProduct(${product.id})">✏️ Edit</button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteProduct(${product.id})">🗑️</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // Orders Table
+        function renderOrdersTable(filterStatus = 'all') {
+            const container = document.getElementById('orders-table');
+            const filteredOrders = filterStatus === 'all' ? orders : orders.filter(o => o.status.toLowerCase().includes(filterStatus));
+            
+            if (filteredOrders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🛒</div>
+                        <h3>Belum ada order</h3>
+                        <p>Order dari customer akan muncul di sini</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Tanggal</th>
+                            <th>Total</th>
+                            <th>Metode Bayar</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${filteredOrders.map(order => `
+                            <tr>
+                                <td><strong>${order.orderId}</strong></td>
+                                <td>${order.user}</td>
+                                <td>${new Date(order.date).toLocaleDateString('id-ID')}</td>
+                                <td>Rp ${formatPrice(order.total)}</td>
+                                <td>${order.paymentMethod}</td>
+                                <td><span class="status-badge ${order.status.toLowerCase().replace(' ', '-')}">${order.status}</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary" onclick="viewOrder('${order.orderId}')">👁️ Detail</button>
+                                    <button class="btn btn-sm btn-success" onclick="updateOrderStatus('${order.orderId}', 'completed')">✅</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // Users Table
+        function renderUsersTable() {
+            const container = document.getElementById('users-table');
+            
+            if (users.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">👥</div>
+                        <h3>Belum ada user terdaftar</h3>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Tgl Daftar</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${users.map(user => `
+                            <tr>
+                                <td>#${user.id}</td>
+                                <td>${user.username}</td>
+                                <td>${user.email}</td>
+                                <td>${user.role || 'User'}</td>
+                                <td>${new Date(user.createdAt || Date.now()).toLocaleDateString('id-ID')}</td>
+                                <td><span class="status-badge active">Active</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary">✏️ Edit</button>
+                                    <button class="btn btn-sm btn-danger">🚫 Block</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // Recent Orders
+        function renderRecentOrders() {
+            const container = document.getElementById('recent-orders-table');
+            const recentOrders = orders.slice(0, 5);
+            
+            if (recentOrders.length === 0) {
+                container.innerHTML = '<p style="color: #999; text-align: center;">Belum ada order</p>';
+                return;
+            }
+
+            container.innerHTML = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${recentOrders.map(order => `
+                            <tr>
+                                <td><strong>${order.orderId}</strong></td>
+                                <td>${order.user}</td>
+                                <td>Rp ${formatPrice(order.total)}</td>
+                                <td><span class="status-badge ${order.status.toLowerCase().replace(' ', '-')}">${order.status}</span></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // Product Modal Functions
+        function openAddProductModal() {
+            currentEditProductId = null;
+            document.getElementById('product-modal-title').textContent = 'Tambah Produk';
+            document.getElementById('product-form').reset();
+            document.getElementById('product-modal').classList.add('active');
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.remove('active');
+        }
+
+        function editProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+
+            currentEditProductId = id;
+            document.getElementById('product-modal-title').textContent = 'Edit Produk';
+            document.getElementById('product-id').value = id;
+            document.getElementById('product-name').value = product.name;
+            document.getElementById('product-category').value = product.category;
+            document.getElementById('product-price').value = product.price;
+            document.getElementById('product-unit').value = product.unit || '';
+            document.getElementById('product-stock').value = product.stock || '';
+            document.getElementById('product-location').value = product.location || '';
+            document.getElementById('product-seller').value = product.seller || '';
+            document.getElementById('product-description').value = product.description;
+            
+            document.getElementById('product-modal').classList.add('active');
+        }
+
+        function deleteProduct(id) {
+            if (!confirm('Apakah Anda yakin ingin menghapus produk ini?')) return;
+            
+            products = products.filter(p => p.id !== id);
+            localStorage.setItem('bluebub_products', JSON.stringify(products));
+            renderProductsTable();
+            updateDashboardStats();
+            alert('Produk berhasil dihapus!');
+        }
+
+        // Product Form Submit
+        document.getElementById('product-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const productData = {
+                id: currentEditProductId || Date.now(),
+                name: document.getElementById('product-name').value,
+                category: document.getElementById('product-category').value,
+                price: parseFloat(document.getElementById('product-price').value),
+                unit: document.getElementById('product-unit').value,
+                stock: parseInt(document.getElementById('product-stock').value) || 0,
+                location: document.getElementById('product-location').value,
+                seller: document.getElementById('product-seller').value,
+                description: document.getElementById('product-description').value,
+                image: getCategoryIcon(document.getElementById('product-category').value)
+            };
+
+            if (currentEditProductId) {
+                // Update existing product
+                const index = products.findIndex(p => p.id === currentEditProductId);
+                products[index] = productData;
+            } else {
+                // Add new product
+                products.unshift(productData);
+            }
+
+            localStorage.setItem('bluebub_products', JSON.stringify(products));
+            renderProductsTable();
+            updateDashboardStats();
+            closeProductModal();
+            alert('Produk berhasil disimpan!');
+        });
+
+        function getCategoryIcon(category) {
+            const icons = {
+                'Hasil Laut': '🐟',
+                'Teknologi': '💻',
+                'Dataset': '📊',
+                'Inovasi': '🚀'
+            };
+            return icons[category] || '📦';
+        }
+
+        // Order Functions
+        function filterOrders(status) {
+            renderOrdersTable(status);
+        }
+
+        function viewOrder(orderId) {
+            const order = orders.find(o => o.orderId === orderId);
+            if (!order) return;
+
+            const detailsHtml = `
+                <div style="margin-bottom: 1.5rem;">
+                    <h3 style="color: #05445e;">Order ID: ${order.orderId}</h3>
+                    <p style="color: #666;">Tanggal: ${new Date(order.date).toLocaleDateString('id-ID', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })}</p>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                    <h4 style="color: #05445e; margin-bottom: 0.5rem;">Customer</h4>
+                    <p><strong>Nama:</strong> ${order.shipping?.name || order.user}</p>
+                    <p><strong>Email:</strong> ${order.shipping?.email || '-'}</p>
+                    <p><strong>Telepon:</strong> ${order.shipping?.phone || '-'}</p>
+                    <p><strong>Alamat:</strong> ${order.shipping?.address || '-'}, ${order.shipping?.city || '-'}</p>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: #05445e; margin-bottom: 1rem;">Produk</h4>
+                    ${order.items.map(item => `
+                        <div style="display: flex; justify-content: space-between; padding: 0.8rem; background: #f8f9fa; border-radius: 8px; margin-bottom: 0.5rem;">
+                            <div>
+                                <strong>${item.name}</strong><br>
+                                <span style="color: #666;">Qty: ${item.quantity} × Rp ${formatPrice(item.price)}</span>
+                            </div>
+                            <div style="font-weight: bold; color: #088395;">
+                                Rp ${formatPrice(item.price * item.quantity)}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div style="border-top: 2px solid #e0e0e0; padding-top: 1rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Metode Pembayaran:</span>
+                        <strong>${order.paymentMethod}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 1.2rem; color: #088395;">
+                        <strong>Total:</strong>
+                        <strong>Rp ${formatPrice(order.total)}</strong>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem;">
+                    <button class="btn btn-success" style="width: 100%;" onclick="updateOrderStatus('${order.orderId}', 'completed')">
+                        ✅ Tandai Selesai
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('order-details').innerHTML = detailsHtml;
+            document.getElementById('order-modal').classList.add('active');
+        }
+
+        function closeOrderModal() {
+            document.getElementById('order-modal').classList.remove('active');
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            const order = orders.find(o => o.orderId === orderId);
+            if (!order) return;
+
+            order.status = newStatus === 'completed' ? 'Completed' : 'Cancelled';
+            localStorage.setItem('bluebub_orders', JSON.stringify(orders));
+            renderOrdersTable();
+            renderRecentOrders();
+            closeOrderModal();
+            alert(`Order ${orderId} telah diupdate!`);
+        }
+
+        // Export Functions
+        function exportData(type) {
+            let data, filename;
+            
+            switch(type) {
+                case 'products':
+                    data = products;
+                    filename = 'products_export.json';
+                    break;
+                case 'orders':
+                    data = orders;
+                    filename = 'orders_export.json';
+                    break;
+                case 'users':
+                    data = users;
+                    filename = 'users_export.json';
+                    break;
+            }
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+<script src="js/auth.js"></script>
+    <script src="js/sweetalert-helper.js"></script>
+    <script src="js/admin-users.js"></script>
+    <script src="js/navbar.js"></script>
+
+</body>
+</html>

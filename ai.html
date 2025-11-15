@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bluebub - AI Chat</title>
+    <link rel="icon" type="image/png" href="image/logonew.png">
+    
+    <!-- ===== CUSTOM CSS ONLY ===== -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="website icon" type="png" href="/image/logo.png">
+    <!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #2c3e50;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-top: 80px;
+        }
+
+        /* Main Container */
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -5px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .chat-area::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-area::-webkit-scrollbar-track {
+            background: #f7fafc;
+            border-radius: 4px;
+        }
+
+        .chat-area::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 4px;
+        }
+
+        .chat-area::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .welcome-screen h1 {
+            color: #2c3e50;
+            font-size: 36px;
+            margin-bottom: 16px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-screen p {
+            color: #718096;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        /* Message Styling */
+        .message {
+            padding: 20px;
+            margin-bottom: 16px;
+            border-radius: 16px;
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+
+        .message.visible {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user-message {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin-left: auto;
+            max-width: 80%;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .message.ai-message {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            max-width: 80%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .message-content {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 20px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-message .message-avatar {
+            background: white;
+        }
+
+        .ai-message .message-avatar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .message-text {
+            flex: 1;
+            line-height: 1.7;
+            font-size: 16px;
+            color: #2c3e50;
+        }
+
+        .user-message .message-text {
+            color: white;
+        }
+
+        /* Input Container */
+        .input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .input-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .input-box {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            display: flex;
+            align-items: flex-end;
+            padding: 12px 16px;
+            gap: 12px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .input-box:focus-within {
+            border-color: #667eea;
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #4a5568;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #f7fafc;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        #messageInput {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #2c3e50;
+            font-size: 16px;
+            outline: none;
+            resize: none;
+            max-height: 200px;
+            line-height: 1.5;
+            font-family: inherit;
+        }
+
+        #messageInput::placeholder {
+            color: #a0aec0;
+        }
+
+        #sendButton {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        #sendButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.5);
+        }
+
+        #sendButton:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: none;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .typing-indicator.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .typing-content {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            background: #f7fafc;
+            padding: 16px 20px;
+            border-radius: 16px;
+            max-width: 200px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 6px;
+            padding: 8px 0;
+        }
+
+        .typing-dot {
+            width: 10px;
+            height: 10px;
+            background: #667eea;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Context Tags */
+        .context-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .context-tag {
+            background: white;
+            color: #667eea;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            border: 1px solid #e2e8f0;
+            font-weight: 500;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 70px;
+            }
+
+            .main-container {
+                border-radius: 12px 12px 0 0;
+            }
+
+            .welcome-screen h1 {
+                font-size: 28px;
+            }
+
+            .welcome-screen p {
+                font-size: 16px;
+            }
+
+            .message {
+                padding: 16px;
+            }
+
+            .message.user-message,
+            .message.ai-message {
+                max-width: 90%;
+            }
+
+            .input-box {
+                padding: 10px 12px;
+            }
+
+            .action-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+
+            #sendButton {
+                width: 36px;
+                height: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <a href="/" class="navbar-brand">
+            <img src="/image/logonew.png" class="navbar-logo" alt="Bluebub Logo">
+            <span class="brand-text">Bluebub</span>
+        </a>
+    
+        <div class="navbar-menu">
+            <a href="/index.html" class="nav-link">Beranda</a>
+            <a href="/.html" class="nav-link">Peta</a>
+            <a href="/marketplace.html" class="nav-link">Marketplace</a>
+            <a href="/checkout.html" class="nav-link">Cart</a>
+            <a href="/ai.html" class="nav-link">AI Kolaborasi</a>
+            <a href="/statistik.html" class="nav-link">Statistik</a>
+            <a href="/diskusi.html" class="nav-link">Diskusi</a>
+        </div>
+        <div id="auth-links"></div>
+    </nav>
+
+    <div class="main-container">
+        <div class="chat-area" id="chatArea">
+            <div class="welcome-screen" id="welcomeScreen">
+                <h1>Apa yang mau saya bantu?</h1>
+                <p>Tanya aku mengenai oseanography, biologi kelautan, atau ekonomi biru</p>
+            </div>
+        </div>
+
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="typing-content">
+                <div class="message-avatar">🤖</div>
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <div class="input-wrapper">
+                <div class="input-box">
+                    <div class="input-actions">
+                        <button class="action-btn" title="Ocean Data" onclick="quickQuestion('Data perikanan Indonesia')">🐟</button>
+                        <button class="action-btn" title="Collaboration" onclick="quickQuestion('Bagaimana cara kolaborasi?')">🤝</button>
+                        <button class="action-btn" title="Business" onclick="quickQuestion('Peluang bisnis laut')">💼</button>
+                    </div>
+                    <textarea 
+                        id="messageInput" 
+                        placeholder="Tanya apapun tentang blue economy..."
+                        rows="1"
+                    ></textarea>
+                    <button id="sendButton" disabled>➤</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+ 
+
+    <script>
+        // ===== GROQ AI BACKEND INTEGRATION =====
+        const API_BASE_URL = 'http://localhost:3000/api'; // ✅ GROQ BACKEND
+
+        // DOM Elements
+        const chatArea = document.getElementById('chatArea');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const typingIndicator = document.getElementById('typingIndicator');
+
+        // Session Management
+        let sessionId = localStorage.getItem('bluebub_chat_session');
+        if (!sessionId) {
+            sessionId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('bluebub_chat_session', sessionId);
+        }
+
+        console.log('🌊 Bluebub AI Chat with Groq');
+        console.log('📡 Backend:', API_BASE_URL);
+        console.log('👤 Session:', sessionId);
+
+        // Auto resize textarea
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+            sendButton.disabled = this.value.trim() === '';
+        });
+
+        // Add message to chat
+        function addMessage(text, isUser, data = null) {
+            if (welcomeScreen) {
+                welcomeScreen.style.display = 'none';
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ' + (isUser ? 'user-message' : 'ai-message');
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = isUser ? '👤' : '🤖';
+            
+            const textDiv = document.createElement('div');
+            textDiv.className = 'message-text';
+            
+            // Format text dengan line breaks
+            const formattedText = text
+                .replace(/\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>');
+            
+            textDiv.innerHTML = formattedText;
+            
+            contentDiv.appendChild(avatar);
+            contentDiv.appendChild(textDiv);
+            
+            // Add data badge if prediction
+            if (data && Array.isArray(data)) {
+                const badge = document.createElement('div');
+                badge.className = 'context-tags';
+                const tag = document.createElement('span');
+                tag.className = 'context-tag';
+                tag.textContent = `📊 ${data.length} data points`;
+                badge.appendChild(tag);
+                contentDiv.appendChild(badge);
+            }
+            
+            messageDiv.appendChild(contentDiv);
+            chatArea.appendChild(messageDiv);
+            
+            setTimeout(() => messageDiv.classList.add('visible'), 10);
+            
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        // Show/hide typing indicator
+        function showTyping() {
+            typingIndicator.classList.add('active');
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function hideTyping() {
+            typingIndicator.classList.remove('active');
+        }
+
+        // Send message to Groq backend
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            
+            if (message === '') return;
+            
+            // Display user message
+            addMessage(message, true);
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+            sendButton.disabled = true;
+            showTyping();
+            
+            try {
+                // Call GROQ backend
+                const response = await fetch(API_BASE_URL + '/chatbot/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-User-ID': sessionId
+                    },
+                    body: JSON.stringify({
+                        message: message  // ✅ KEY YANG BENAR
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                hideTyping();
+                
+                console.log('✅ Response:', data);
+                
+                if (data.success) {
+                    // Display AI response
+                    addMessage(data.bot_response, false, data.data);
+                } else {
+                    // Display error
+                    addMessage('❌ Error: ' + (data.bot_response || 'Unknown error'), false);
+                }
+                
+            } catch (error) {
+                console.error('❌ Chat error:', error);
+                hideTyping();
+                
+                let errorMessage = '⚠️ Koneksi bermasalah.\n\n';
+                errorMessage += '**Troubleshooting:**\n';
+                errorMessage += '• Pastikan backend running: python app.py\n';
+                errorMessage += '• Check URL: ' + API_BASE_URL + '\n';
+                errorMessage += '• Error: ' + error.message;
+                
+                addMessage(errorMessage, false);
+            }
+        }
+
+        // Quick question handler
+        function quickQuestion(question) {
+            messageInput.value = question;
+            messageInput.style.height = 'auto';
+            messageInput.style.height = messageInput.scrollHeight + 'px';
+            sendButton.disabled = false;
+            setTimeout(() => sendMessage(), 100);
+        }
+
+        // Event listeners
+        sendButton.addEventListener('click', sendMessage);
+        
+        messageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (!sendButton.disabled) {
+                    sendMessage();
+                }
+            }
+        });
+
+        // Focus on input
+        messageInput.focus();
+
+        // Console branding
+        console.log('%c🌊 Bluebub AI Assistant with Groq', 'color: #667eea; font-size: 16px; font-weight: bold;');
+        console.log('%c🤖 Powered by Llama 3.1 70B', 'color: #8e8ea0; font-size: 12px;');
+
+        // ===== NAVBAR AUTH LINKS =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const authLinks = document.getElementById('auth-links');
+            const token = localStorage.getItem('bluebub_token');
+            const userStr = localStorage.getItem('bluebub_user');
+            
+            if (token && userStr) {
+                try {
+                    const user = JSON.parse(userStr);
+                    authLinks.innerHTML = 
+                        `<a href="profile.html" class="nav-link">👤 ${user.username}</a>` +
+                        '<a href="#" class="nav-link" onclick="handleLogout(event)" style="color: #fc8181;">Logout</a>';
+                } catch (e) {
+                    console.error('Parse user error:', e);
+                }
+            } else {
+                authLinks.innerHTML = 
+                    '<a href="login.html" class="nav-link">Login</a>' +
+                    '<a href="register.html" class="nav-link profile-btn">Register</a>';
+            }
+        });
+
+        function handleLogout(e) {
+            e.preventDefault();
+            if (confirm('Yakin ingin logout?')) {
+                localStorage.removeItem('bluebub_token');
+                localStorage.removeItem('bluebub_user');
+                localStorage.removeItem('bluebub_chat_session');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+
+    <script src="js/sweetalert-helper.js"></script>
+<script src="js/auth.js"></script>
+    <script src="js/navbar.js"></script>
+</body>
+</html>

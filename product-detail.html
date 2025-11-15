@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Produk - Bluebub</title>
+    <link rel="icon" type="image/png" href="image/logonew.png">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%);
+            min-height: 100vh;
+        }
+
+        .detail-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 5%;
+        }
+
+        .product-detail {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.1);
+        }
+
+        .product-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            padding: 3rem;
+        }
+
+        .product-image-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #e0e0e0, #f5f5f5);
+            border-radius: 15px;
+            height: 450px;
+            font-size: 10rem;
+        }
+
+        .product-info-section h1 {
+            color: #05445e;
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-category-badge {
+            display: inline-block;
+            background: #40e0d0;
+            color: #05445e;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-price-section {
+            background: linear-gradient(135deg, #088395, #05445e);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+        }
+
+        .product-price-section .price {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .product-description {
+            color: #555;
+            line-height: 1.8;
+            margin: 1.5rem 0;
+            font-size: 1.05rem;
+        }
+
+        .product-meta {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .meta-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .meta-item strong {
+            color: #088395;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .quantity-selector button {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #088395;
+            background: white;
+            color: #088395;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .quantity-selector button:hover {
+            background: #088395;
+            color: white;
+        }
+
+        .quantity-selector input {
+            width: 80px;
+            text-align: center;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #40e0d0, #088395);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(8, 131, 149, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 2px solid #088395;
+            color: #088395;
+        }
+
+        .btn-secondary:hover {
+            background: #088395;
+            color: white;
+        }
+
+        .seller-info {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+
+        .seller-info h3 {
+            color: #05445e;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .product-detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-image-section {
+                height: 300px;
+                font-size: 6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <a href="/" class="navbar-brand">
+            <img src="/image/logonew.png" class="navbar-logo" alt="Bluebub Logo">
+            <span class="brand-text">Bluebub</span>
+        </a>
+    
+        <div class="navbar-menu">
+            <a href="/index.html" class="nav-link">Beranda</a>
+            <a href="/.html" class="nav-link">Peta</a>
+            <a href="/marketplace.html" class="nav-link">Marketplace</a>
+            <a href="/checkout.html" class="nav-link">Cart</a>
+            <a href="/ai.html" class="nav-link">AI Kolaborasi</a>
+            <a href="/statistik.html" class="nav-link">Statistik</a>
+            <a href="/diskusi.html" class="nav-link">Diskusi</a>
+        </div>
+        <div id="auth-links"></div>
+    </nav>
+
+    <div class="detail-container">
+        <div class="product-detail">
+            <div class="product-detail-grid" id="product-detail-content">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer-modern">
+    <div class="footer-container">
+        <!-- Brand Section -->
+        <div class="footer-section">
+            <div class="footer-logo">
+                <img src="image/logonew.png" alt="Bluebub Logo" class="footer-logo-img">
+                <h3>Bluebub</h3>
+            </div>
+            <p class="footer-tagline">
+                Platform inovasi dan data laut Indonesia untuk masa depan ekonomi biru yang berkelanjutan
+            </p>
+            <div class="footer-social">
+                <a href="https://www.instagram.com/nabilorazqa/" class="social-icon" title="Instagram">📷</a>
+                <a href="#" class="social-icon" title="Twitter">🐦</a>
+                <a href="www.linkedin.com/in/nabil-razqa-a2b058286" class="social-icon" title="LinkedIn">💼</a>
+                <a href="#" class="social-icon" title="YouTube">🎥</a>
+            </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="footer-section">
+            <h4>Navigasi</h4>
+            <ul class="footer-links">
+                <li><a href="index.html">🏠 Beranda</a></li>
+                <li><a href="map-banten.html">🗺️ Peta Maritim</a></li>
+                <li><a href="marketplace.html">🛒 Marketplace</a></li>
+                <li><a href="ai.html">🤖 AI Kolaborasi</a></li>
+                <li><a href="statistik.html">📊 Statistik</a></li>
+            </ul>
+        </div>
+        
+        <!-- Features -->
+        <div class="footer-section">
+            <h4>Fitur Utama</h4>
+            <ul class="footer-links">
+                <li><a href="statistik.html">🐟 Prediksi Stok Ikan</a></li>
+                <li><a href="#">🌊 Data Oseanografi</a></li>
+                <li><a href="statistik.html">📈 Analisis Perikanan</a></li>
+                <li><a href="map-banten.html">🎣 Zona Tangkap</a></li>
+            </ul>
+        </div>
+        
+        <!-- Contact Info -->
+        <div class="footer-section">
+            <h4>Kontak</h4>
+            <ul class="footer-contact">
+                <li>
+                    <span class="contact-icon">📧</span>
+                    <a href="mailto:info@bluebub.id">nabilrazqab@bluebub.id</a>
+                </li>
+                <li>
+                    <span class="contact-icon">📱</span>
+                    <a href="tel:+62123456789">+62 856 9725 0185</a>
+                </li>
+                <li>
+                    <span class="contact-icon">📍</span>
+                    <span>Banten, Indonesia</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Bottom Bar -->
+    <div class="footer-bottom">
+        <div class="footer-container">
+            <p>&copy; 2025 Bluebub - Marketplace Inovasi dan Data Laut Indonesia. All rights reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy Policy</a>
+                <span>•</span>
+                <a href="#">Terms of Service</a>
+                <span>•</span>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/sweetalert-helper.js"></script>
+    <script src="js/navbar.js"></script>
+
+    <script>
+        let currentProduct = null;
+        let quantity = 1;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProductDetail();
+            updateAuthNavbar();
+        });
+
+        function updateAuthNavbar() {
+            const authLinks = document.getElementById('auth-links');
+            const user = JSON.parse(localStorage.getItem('bluebub_user') || 'null');
+            
+            if (user) {
+                authLinks.innerHTML = `
+                    <a href="profile.html" class="nav-link">👤 ${user.username}</a>
+                    <a href="#" class="nav-link" onclick="logout()">Logout</a>
+                `;
+            } else {
+                authLinks.innerHTML = `
+                    <a href="login.html" class="nav-link">Login</a>
+                `;
+            }
+        }
+
+        function loadProductDetail() {
+            const productId = parseInt(localStorage.getItem('selected_product'));
+            const products = JSON.parse(localStorage.getItem('bluebub_products') || '[]');
+            currentProduct = products.find(p => p.id === productId);
+
+            if (!currentProduct) {
+                document.getElementById('product-detail-content').innerHTML = '<p>Produk tidak ditemukan</p>';
+                return;
+            }
+
+            document.getElementById('product-detail-content').innerHTML = `
+                <div class="product-image-section">
+                    ${currentProduct.image || '📦'}
+                </div>
+                <div class="product-info-section">
+                    <span class="product-category-badge">${currentProduct.category}</span>
+                    <h1>${currentProduct.name}</h1>
+                    
+                    <div class="product-price-section">
+                        <div class="price">Rp ${formatPrice(currentProduct.price)}${currentProduct.unit || ''}</div>
+                    </div>
+
+                    <div class="product-description">
+                        ${currentProduct.description}
+                    </div>
+
+                    <div class="product-meta">
+                        <div class="meta-item">
+                            <strong>📦 Stok</strong>
+                            ${currentProduct.stock || 'Tersedia'}
+                        </div>
+                        <div class="meta-item">
+                            <strong>📍 Lokasi</strong>
+                            ${currentProduct.location}
+                        </div>
+                        <div class="meta-item">
+                            <strong>👤 Penjual</strong>
+                            ${currentProduct.seller}
+                        </div>
+                        <div class="meta-item">
+                            <strong>🏷️ Kategori</strong>
+                            ${currentProduct.category}
+                        </div>
+                    </div>
+
+                    <div class="quantity-selector">
+                        <button onclick="decreaseQuantity()">−</button>
+                        <input type="number" id="quantity-input" value="1" min="1" readonly>
+                        <button onclick="increaseQuantity()">+</button>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" onclick="addToCart()">+ Keranjang</button>
+                        <button class="btn btn-primary" onclick="buyNow()">Beli Sekarang</button>
+                    </div>
+
+                    <div class="seller-info">
+                        <h3>Informasi Penjual</h3>
+                        <p><strong>Nama:</strong> ${currentProduct.seller}</p>
+                        <p><strong>Lokasi:</strong> ${currentProduct.location}</p>
+                        <p><strong>Rating:</strong> ⭐⭐⭐⭐⭐ (4.8/5)</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatPrice(price) {
+            return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function decreaseQuantity() {
+            if (quantity > 1) {
+                quantity--;
+                document.getElementById('quantity-input').value = quantity;
+            }
+        }
+
+        function increaseQuantity() {
+            quantity++;
+            document.getElementById('quantity-input').value = quantity;
+        }
+
+        function addToCart() {
+            let cart = JSON.parse(localStorage.getItem('bluebub_cart') || '[]');
+            const existingItem = cart.find(item => item.id === currentProduct.id);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({...currentProduct, quantity: quantity});
+            }
+            
+            localStorage.setItem('bluebub_cart', JSON.stringify(cart));
+            alert(`${quantity} ${currentProduct.name} ditambahkan ke keranjang!`);
+        }
+
+        function buyNow() {
+            addToCart();
+            window.location.href = 'checkout.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('bluebub_user');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

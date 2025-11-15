@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peta Perikanan Banten - Bluebub</title>
+    <link rel="icon" type="image/png" href="image/logonew.png">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-top: 80px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        .map-container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        .map-header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .map-header h1 {
+            color: #088395;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .map-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #088395 0%, #05445e 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        #map {
+            height: 700px;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1;
+            position: relative;
+        }
+        
+        /* ✅ Weather Info Panel (Inside Map) */
+        .weather-info-panel {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            max-width: 300px;
+        }
+        
+        .weather-info-title {
+            font-weight: bold;
+            color: #088395;
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .weather-data {
+            font-size: 13px;
+            line-height: 1.8;
+        }
+        
+        .weather-data strong {
+            color: #088395;
+        }
+        
+        .weather-alert {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f39c12;
+            color: white;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .weather-alert.safe {
+            background: #27ae60;
+        }
+        
+        .weather-alert.warning {
+            background: #e74c3c;
+        }
+        
+        .map-legend {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            max-width: 280px;
+        }
+        
+        .legend-title {
+            font-weight: bold;
+            color: #088395;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            font-size: 13px;
+        }
+        
+        .legend-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .info-panel {
+            background: white;
+            margin-top: 20px;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .info-card {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #088395;
+            transition: transform 0.3s;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(8, 131, 149, 0.2);
+        }
+        
+        .info-card h3 {
+            color: #088395;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .popup-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #088395;
+            margin-bottom: 8px;
+        }
+        
+        .popup-info {
+            font-size: 13px;
+            line-height: 1.8;
+            color: #333;
+        }
+        
+        .popup-tag {
+            display: inline-block;
+            background: #088395;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+        
+        .layer-control {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .layer-control label {
+            display: block;
+            margin: 8px 0;
+            cursor: pointer;
+        }
+        
+        .layer-control input {
+            margin-right: 8px;
+        }
+        
+        /* Weather Layer Toggle Button */
+        .weather-toggle {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            font-weight: 600;
+            color: #088395;
+            transition: all 0.3s;
+        }
+        
+        .weather-toggle:hover {
+            background: #088395;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <a href="/" class="navbar-brand">
+            <img src="/image/logonew.png" class="navbar-logo" alt="Bluebub Logo">
+            <span class="brand-text">Bluebub</span>
+        </a>
+    
+        <div class="navbar-menu">
+            <a href="/index.html" class="nav-link">Beranda</a>
+            <a href="/map-maritim.html" class="nav-link">Peta</a>
+            <a href="/marketplace.html" class="nav-link">Marketplace</a>
+            <a href="/checkout.html" class="nav-link">Cart</a>
+            <a href="/ai.html" class="nav-link">AI Kolaborasi</a>
+            <a href="/statistik.html" class="nav-link">Statistik</a>
+            <a href="/diskusi.html" class="nav-link">Diskusi</a>
+        </div>
+        <div id="auth-links"></div>
+    </nav>
+
+    <div class="map-container">
+        <div class="map-header">
+            <h1>🗺️ Peta Perikanan Provinsi Banten</h1>
+            <p>Visualisasi TPI, Zona Tangkap, Potensi Perikanan & Cuaca Maritim Real-Time</p>
+            
+            <div class="stats-bar">
+                <div class="stat-card">
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">🏪 TPI Aktif</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">🎯 Zona Tangkap</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">25+</div>
+                    <div class="stat-label">🐟 Jenis Ikan</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="weatherTemp">--°C</div>
+                    <div class="stat-label">🌤️ Suhu Maritim</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="map">
+            <!-- ✅ Weather Info Panel akan di-append di sini via JS -->
+        </div>
+        
+        <div class="info-panel">
+            <h2 style="color: #088395; margin-bottom: 15px;">📊 Potensi Perikanan Banten</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>🐟 Jenis Ikan Dominan</h3>
+                    <p><strong>Pelagis Kecil:</strong> Tongkol, Teri, Layang, Kembung<br>
+                    <strong>Demersal:</strong> Bawal Putih, Layur, Kakap, Kerapu<br>
+                    <strong>Lainnya:</strong> Udang, Cumi-cumi, Pari</p>
+                </div>
+                <div class="info-card">
+                    <h3>📍 TPI Utama</h3>
+                    <p><strong>Karangantu:</strong> TPI terbesar di Banten<br>
+                    <strong>Anyer:</strong> Wisata & perikanan<br>
+                    <strong>Labuan:</strong> Kapal besar & menengah<br>
+                    <strong>Lontar:</strong> Perikanan tradisional</p>
+                </div>
+                <div class="info-card">
+                    <h3>🌊 Zona Potensial</h3>
+                    <p><strong>Teluk Banten:</strong> Koordinat 106°00'-106°35' BT<br>
+                    <strong>Peak Season:</strong> Oktober (56 titik tangkap)<br>
+                    <strong>Metode:</strong> Pukat, Gillnet, Pancing</p>
+                </div>
+                <div class="info-card" id="weatherCard">
+                    <h3>🌤️ Kondisi Cuaca</h3>
+                    <p id="weatherSummary">Loading...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer-modern">
+        <div class="footer-container">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <img src="image/logonew.png" alt="Bluebub Logo" class="footer-logo-img">
+                    <h3>Bluebub</h3>
+                </div>
+                <p class="footer-tagline">
+                    Platform inovasi dan data laut Indonesia untuk masa depan ekonomi biru yang berkelanjutan
+                </p>
+                <div class="footer-social">
+                    <a href="https://www.instagram.com/nabilorazqa/" class="social-icon">📷</a>
+                    <a href="#" class="social-icon">🐦</a>
+                    <a href="https://www.linkedin.com/in/nabil-razqa-a2b058286" class="social-icon">💼</a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Navigasi</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">🏠 Beranda</a></li>
+                    <li><a href="map-banten.html">🗺️ Peta Maritim</a></li>
+                    <li><a href="marketplace.html">🛒 Marketplace</a></li>
+                    <li><a href="statistik.html">📊 Statistik</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Fitur Utama</h4>
+                <ul class="footer-links">
+                    <li><a href="statistik.html">🐟 Prediksi Stok Ikan</a></li>
+                    <li><a href="#">🌊 Data Oseanografi</a></li>
+                    <li><a href="map-banten.html">🎣 Zona Tangkap</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Kontak</h4>
+                <ul class="footer-contact">
+                    <li>
+                        <span class="contact-icon">📧</span>
+                        <a href="mailto:nabilrazqab@bluebub.id">nabilrazqab@bluebub.id</a>
+                    </li>
+                    <li>
+                        <span class="contact-icon">📱</span>
+                        <a href="tel:+6285697250185">+62 856 9725 0185</a>
+                    </li>
+                    <li>
+                        <span class="contact-icon">📍</span>
+                        <span>Banten, Indonesia</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="footer-container">
+                <p>&copy; 2025 Bluebub. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy</a>
+                    <span>•</span>
+                    <a href="#">Terms</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // ===== CONFIG =====
+        const WEATHER_API = 'http://localhost:3000/api/weather';
+        const OPENWEATHER_API_KEY = 'your_openweather_api_key_here'; // ✅ Ganti dengan API key Anda
+        
+        // Initialize map
+        const map = L.map('map').setView([-6.0, 106.0], 10);
+
+        // ===== BASE LAYERS =====
+        const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap',
+            maxZoom: 18
+        });
+
+        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: '© Esri',
+            maxZoom: 18
+        });
+
+        // ✅ WEATHER LAYERS dari OpenWeatherMap
+        const weatherLayers = {
+            clouds: L.tileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${OPENWEATHER_API_KEY}`, {
+                attribution: '© OpenWeatherMap',
+                opacity: 0.6
+            }),
+            precipitation: L.tileLayer(`https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${OPENWEATHER_API_KEY}`, {
+                attribution: '© OpenWeatherMap',
+                opacity: 0.6
+            }),
+            wind: L.tileLayer(`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${OPENWEATHER_API_KEY}`, {
+                attribution: '© OpenWeatherMap',
+                opacity: 0.5
+            }),
+            temp: L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${OPENWEATHER_API_KEY}`, {
+                attribution: '© OpenWeatherMap',
+                opacity: 0.5
+            })
+        };
+
+        osmLayer.addTo(map);
+
+        // ===== TPI DATA =====
+        const tpiData = [
+            {name: 'TPI Karangantu', coords: [-6.0328, 106.1425], location: 'Serang', capacity: 'Besar', production: '80-100 ton/hari', species: 'Tongkol, Bawal, Layur, Udang', fishermen: '1,500+ nelayan', facilities: 'Cold storage, Es balok, Dermaga 15 unit', icon: '🏪'},
+            {name: 'TPI Anyer', coords: [-6.0311, 105.8822], location: 'Anyar', capacity: 'Menengah', production: '30-40 ton/hari', species: 'Teri, Kembung, Cumi-cumi', fishermen: '800 nelayan', facilities: 'Wisata bahari, Dermaga 8 unit', icon: '⚓'},
+            {name: 'TPI Labuan', coords: [-6.3889, 105.7903], location: 'Pandeglang', capacity: 'Besar', production: '50-70 ton/hari', species: 'Tongkol, Tenggiri, Kakap', fishermen: '1,200 nelayan', facilities: 'Dermaga kapal besar, Cold storage', icon: '🚢'},
+            {name: 'TPI Lontar', coords: [-6.0558, 106.1036], location: 'Serang', capacity: 'Kecil', production: '10-15 ton/hari', species: 'Ikan campuran, Udang kecil', fishermen: '400 nelayan', facilities: 'Tradisional, Dermaga 4 unit', icon: '⛵'},
+            {name: 'TPI Pasauran', coords: [-5.9756, 106.0756], location: 'Serang', capacity: 'Kecil', production: '8-12 ton/hari', species: 'Bawal, Layur, Pari', fishermen: '350 nelayan', facilities: 'Dermaga kecil 3 unit', icon: '🎣'}
+        ];
+
+        // ===== ZONA TANGKAP =====
+        const fishingZones = [
+            {name: 'Zona A1', coords: [-5.95, 106.05], catch: 'Tongkol', potential: 'Tinggi'},
+            {name: 'Zona A2', coords: [-5.98, 106.10], catch: 'Bawal', potential: 'Sangat Tinggi'},
+            {name: 'Zona B1', coords: [-6.02, 106.15], catch: 'Layur', potential: 'Tinggi'},
+            {name: 'Zona B2', coords: [-6.05, 106.20], catch: 'Teri', potential: 'Sedang'},
+            {name: 'Zona F1', coords: [-5.88, 106.18], catch: 'Tongkol', potential: 'Tinggi'},
+            {name: 'Zona F2', coords: [-5.92, 106.25], catch: 'Layang', potential: 'Sedang'}
+        ];
+
+        // ===== AREA KONSERVASI =====
+        const conservationAreas = [
+            {name: 'Kawasan Konservasi Teluk Banten', coords: [-6.05, 106.15], area: '15,000 ha', status: 'Kawasan lindung', description: 'Habitat mangrove & nursery ground'},
+            {name: 'Zona Inti Ujung Kulon', coords: [-6.75, 105.35], area: '76,214 ha', status: 'Taman Nasional (UNESCO)', description: 'Biodiversitas tinggi, terumbu karang'}
+        ];
+
+        // ===== LAYER GROUPS =====
+        const tpiLayer = L.layerGroup();
+        const zoneLayer = L.layerGroup();
+        const conservationLayer = L.layerGroup();
+
+        // Draw TPI markers
+        tpiData.forEach(tpi => {
+            const marker = L.marker(tpi.coords, {
+                icon: L.divIcon({
+                    className: 'custom-icon',
+                    html: `<div style="font-size: 32px; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">${tpi.icon}</div>`,
+                    iconSize: [40, 40]
+                })
+            }).addTo(tpiLayer);
+
+            marker.bindPopup(`
+                <div class="popup-title">${tpi.icon} ${tpi.name}</div>
+                <div class="popup-info">
+                    <strong>📍 Lokasi:</strong> ${tpi.location}<br>
+                    <strong>📦 Kapasitas:</strong> ${tpi.capacity}<br>
+                    <strong>📊 Produksi:</strong> ${tpi.production}<br>
+                    <strong>🐟 Spesies:</strong> ${tpi.species}<br>
+                    <strong>⛵ Nelayan:</strong> ${tpi.fishermen}<br>
+                    <strong>🏗️ Fasilitas:</strong> ${tpi.facilities}
+                </div>
+                <span class="popup-tag">TPI</span>
+            `);
+        });
+
+        // Draw Fishing Zones
+        fishingZones.forEach(zone => {
+            const color = zone.potential === 'Sangat Tinggi' ? '#e74c3c' :
+                         zone.potential === 'Tinggi' ? '#f39c12' :
+                         zone.potential === 'Sedang' ? '#3498db' : '#95a5a6';
+
+            const circle = L.circle(zone.coords, {
+                color: color,
+                fillColor: color,
+                fillOpacity: 0.3,
+                radius: 3000,
+                weight: 2
+            }).addTo(zoneLayer);
+
+            circle.bindPopup(`
+                <div class="popup-title">🎯 ${zone.name}</div>
+                <div class="popup-info">
+                    <strong>Target:</strong> ${zone.catch}<br>
+                    <strong>Potensi:</strong> ${zone.potential}
+                </div>
+                <span class="popup-tag" style="background: ${color};">Zona Tangkap</span>
+            `);
+        });
+
+        // Draw Conservation Areas
+        conservationAreas.forEach(area => {
+            const polygon = L.circle(area.coords, {
+                color: '#27ae60',
+                fillColor: '#27ae60',
+                fillOpacity: 0.2,
+                radius: 8000,
+                weight: 2,
+                dashArray: '5, 5'
+            }).addTo(conservationLayer);
+
+            polygon.bindPopup(`
+                <div class="popup-title">🌿 ${area.name}</div>
+                <div class="popup-info">
+                    <strong>Luas:</strong> ${area.area}<br>
+                    <strong>Status:</strong> ${area.status}<br>
+                    <strong>Deskripsi:</strong> ${area.description}
+                </div>
+                <span class="popup-tag" style="background: #27ae60;">Konservasi</span>
+            `);
+        });
+
+        // Add all layers
+        tpiLayer.addTo(map);
+        zoneLayer.addTo(map);
+        conservationLayer.addTo(map);
+
+        // ===== WEATHER INFO PANEL =====
+        async function loadWeather() {
+            try {
+                const response = await fetch(`${WEATHER_API}/maritime/banten`);
+                const data = await response.json();
+                
+                if (data.success && data.current) {
+                    displayWeatherInfo(data.current);
+                }
+            } catch (error) {
+                console.error('Weather error:', error);
+            }
+        }
+
+        function displayWeatherInfo(weather) {
+            // Update stats bar
+            document.getElementById('weatherTemp').textContent = `${weather.temperature}°C`;
+            
+            // Create weather panel
+            const panel = document.createElement('div');
+            panel.className = 'weather-info-panel';
+            panel.innerHTML = `
+                <div class="weather-info-title">
+                    🌤️ Cuaca Maritim Banten
+                </div>
+                <div class="weather-data">
+                    <strong>🌡️ Suhu:</strong> ${weather.temperature}°C (terasa ${weather.feels_like}°C)<br>
+                    <strong>☁️ Kondisi:</strong> ${weather.weather}<br>
+                    <strong>💨 Angin:</strong> ${weather.wind_speed} km/h ${weather.wind_description}<br>
+                    <strong>🌊 Laut:</strong> ${weather.sea_condition}<br>
+                    <strong>💧 Kelembaban:</strong> ${weather.humidity}%<br>
+                    <strong>👁️ Visibility:</strong> ${weather.visibility} km
+                </div>
+                <div class="weather-alert ${getAlertClass(weather.fishing_recommendation)}">
+                    ${weather.fishing_recommendation}
+                </div>
+            `;
+            
+            document.getElementById('map').appendChild(panel);
+            
+            // Update info card
+            document.getElementById('weatherSummary').innerHTML = `
+                <strong>${weather.temperature}°C</strong> - ${weather.weather}<br>
+                Angin: ${weather.wind_speed} km/h<br>
+                ${weather.fishing_recommendation}
+            `;
+        }
+
+        function getAlertClass(recommendation) {
+            if (recommendation.includes('✅')) return 'safe';
+            if (recommendation.includes('❌')) return 'warning';
+            return '';
+        }
+
+        // ===== LEGEND =====
+        const legend = L.control({position: 'bottomright'});
+        legend.onAdd = function(map) {
+            const div = L.DomUtil.create('div', 'map-legend');
+            div.innerHTML = `
+                <div class="legend-title">🗺️ Legenda</div>
+                <div class="legend-item">
+                    <div class="legend-icon">🏪</div>
+                    <span>TPI</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-icon" style="width:20px;height:20px;background:#f39c12;border-radius:50%;"></div>
+                    <span>Zona Tangkap</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-icon" style="width:20px;height:20px;background:#27ae60;border-radius:50%;opacity:0.5;"></div>
+                    <span>Konservasi</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-icon">🌧️</div>
+                    <span>Weather Layer</span>
+                </div>
+            `;
+            return div;
+        };
+        legend.addTo(map);
+
+        // ===== LAYER CONTROL =====
+        const layerControl = L.control({position: 'topleft'});
+        layerControl.onAdd = function(map) {
+            const div = L.DomUtil.create('div', 'layer-control');
+            div.innerHTML = `
+                <div style="font-weight: bold; margin-bottom: 10px;">🗂️ Layer Control</div>
+                <label><input type="checkbox" checked onchange="toggleLayer('tpi')"> TPI</label>
+                <label><input type="checkbox" checked onchange="toggleLayer('zone')"> Zona Tangkap</label>
+                <label><input type="checkbox" checked onchange="toggleLayer('conservation')"> Konservasi</label>
+                <hr style="margin: 10px 0;">
+                <div style="font-weight: bold; margin-bottom: 5px;">🌤️ Weather Layers:</div>
+                <label><input type="checkbox" onchange="toggleWeatherLayer('clouds')"> ☁️ Awan</label>
+                <label><input type="checkbox" onchange="toggleWeatherLayer('precipitation')"> 🌧️ Hujan</label>
+                <label><input type="checkbox" onchange="toggleWeatherLayer('wind')"> 💨 Angin</label>
+                <label><input type="checkbox" onchange="toggleWeatherLayer('temp')"> 🌡️ Suhu</label>
+                <hr style="margin: 10px 0;">
+                <label><input type="radio" name="basemap" checked onchange="changeBasemap('osm')"> Street Map</label>
+                <label><input type="radio" name="basemap" onchange="changeBasemap('satellite')"> Satellite</label>
+            `;
+            return div;
+        };
+        layerControl.addTo(map);
+
+        // Toggle functions
+        function toggleLayer(layerName) {
+            if (layerName === 'tpi') {
+                map.hasLayer(tpiLayer) ? map.removeLayer(tpiLayer) : map.addLayer(tpiLayer);
+            } else if (layerName === 'zone') {
+                map.hasLayer(zoneLayer) ? map.removeLayer(zoneLayer) : map.addLayer(zoneLayer);
+            } else if (layerName === 'conservation') {
+                map.hasLayer(conservationLayer) ? map.removeLayer(conservationLayer) : map.addLayer(conservationLayer);
+            }
+        }
+
+        function toggleWeatherLayer(layerName) {
+            const layer = weatherLayers[layerName];
+            if (map.hasLayer(layer)) {
+                map.removeLayer(layer);
+            } else {
+                map.addLayer(layer);
+            }
+        }
+
+        function changeBasemap(type) {
+            if (type === 'osm') {
+                map.removeLayer(satelliteLayer);
+                map.addLayer(osmLayer);
+            } else {
+                map.removeLayer(osmLayer);
+                map.addLayer(satelliteLayer);
+            }
+        }
+
+        // Load weather on page load
+        window.addEventListener('load', loadWeather);
+        
+        // Auto refresh every 10 minutes
+        setInterval(loadWeather, 600000);
+
+        console.log('🗺️ Peta Banten dengan Weather Layer Loaded');
+    </script>
+
+    <script src="js/sweetalert-helper.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/navbar.js"></script>
+</body>
+</html>
